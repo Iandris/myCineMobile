@@ -7,24 +7,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="10dp"
     android:weightSum="1"
-    android:gravity="center">
+    android:gravity="left">
 
-    A<LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="256dp">
+    A
+
+    <LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:weightSum="1">
 
         <ImageView
-            android:layout_width="176dp"
-            android:layout_height="225dp"
-            android:id="@+id/imageView3"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/starwars" />
+        android:layout_width="457dp"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView3"
+        app:srcCompat="@drawable/starwars" />
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="210dp"
-            android:layout_height="234dp">
+            android:layout_width="361dp"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_weight="0.82"
+            android:gravity="center">
 
             <TextView
                 android:text="STAR WARS"
@@ -34,56 +39,50 @@
                 android:textSize="36sp" />
 
             <TextView
-                android:text="TextView"
+            android:text="a;sldkfja;sldkjfa;lskdjfddddwerwerwerwerasdfasdlkjfals;dfjkalskdjfla;skdjfl;askdjflasdjfl;asdjfl;asdkjfalsdjf"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:id="@+id/textView18"
+            android:textSize="24sp"
+                android:layout_weight="0.58" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_weight="0.21" />
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ratingBar"
+                android:rating="2"
+                android:stepSize="1" />
+
+            <ToggleButton
+                android:text="ToggleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView18"
-                android:textSize="24sp" />
+                android:id="@+id/toggleButton"
+                android:textOff="Check Out"
+                android:textOn="Check In" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:id="@+id/spinner2" />
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ratingBar"
-        android:rating="2"
-        android:stepSize="1" />
-
-    <ToggleButton
-        android:text="ToggleButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toggleButton"
-        android:textOff="Check Out"
-        android:textOn="Check In" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:id="@+id/spinner2" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="163dp">
-
-        <ImageView
-            android:layout_width="146dp"
-            android:layout_height="173dp"
-            app:srcCompat="@drawable/placeholder"
-            android:id="@+id/imageView4"
-            android:layout_weight="0.13" />
-
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="255dp"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="261dp"
+                android:layout_height="353dp"
+                app:srcCompat="@drawable/placeholder"
+                android:id="@+id/imageView4" />
 
             <TextView
                 android:text="Last, First"
@@ -120,6 +119,7 @@
                 android:id="@+id/textView23"
                 android:textSize="24sp" />
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
