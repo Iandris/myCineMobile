@@ -1,7 +1,3 @@
 <resources>
     <string name="app_name">MyCineMobile</string>
-
-    <string-array name="friends" >
-        <item>Smith, John</item>
-    </string-array>
 </resources>

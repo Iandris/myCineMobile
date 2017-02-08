@@ -1,4 +1,4 @@
-package youngmike.com.mycinemobile;
+package com.youngmike.mycinemobile;
 
 import org.junit.Test;
 

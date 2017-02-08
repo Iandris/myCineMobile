@@ -1,4 +1,4 @@
-package youngmike.com.mycinemobile;
+package com.youngmike.mycinemobile;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("youngmike.com.mycinemobile", appContext.getPackageName());
+        assertEquals("com.youngmike.mycinemobile", appContext.getPackageName());
     }
 }
