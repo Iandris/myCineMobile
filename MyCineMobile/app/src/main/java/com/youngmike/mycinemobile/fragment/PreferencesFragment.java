@@ -1,4 +1,4 @@
-package com.youngmike.mycinemobile;
+package com.youngmike.mycinemobile.fragment;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.youngmike.mycinemobile.R;
+
 /**
  * Created by Mike on 2/8/17.
  */
@@ -23,9 +25,10 @@ public class PreferencesFragment extends Fragment {
     Button mSaveButton;
     EditText mFirstName;
     EditText mLastName;
-    CheckBox mCheckbox;
+    CheckBox mTextNotifications;
     EditText mRentalPeriod;
     EditText mReminderThreshold;
+    CheckBox mRememberMe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,9 +40,10 @@ public class PreferencesFragment extends Fragment {
         mSaveButton = (Button) v.findViewById(R.id.btn_savePref);
         mFirstName = (EditText) v.findViewById(R.id.et_firstName);
         mLastName = (EditText) v.findViewById(R.id.et_LastName);
-        mCheckbox = (CheckBox) v.findViewById(R.id.cbx_TextNotification);
+        mTextNotifications = (CheckBox) v.findViewById(R.id.cbx_TextNotification);
         mRentalPeriod = (EditText) v.findViewById(R.id.et_RentalPeriod);
         mReminderThreshold = (EditText) v.findViewById(R.id.et_ReminderThreshold);
+        mRememberMe = (CheckBox) v.findViewById(R.id.cbx_remember_me);
 
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +84,11 @@ public class PreferencesFragment extends Fragment {
 
         mFirstName.setText(sharedPreferences.getString("First_Name", ""));
         mLastName.setText(sharedPreferences.getString("Last_Name", ""));
-        mCheckbox.setChecked(sharedPreferences.getBoolean("Text_Notifications", false));
+        mTextNotifications.setChecked(sharedPreferences.getBoolean("Text_Notifications", false));
 
         mRentalPeriod.setText(String.valueOf(sharedPreferences.getInt("Rental_Period", 7)));
         mReminderThreshold.setText(String.valueOf(sharedPreferences.getInt("Reminder_Threshold", 48)));
+        mRememberMe.setChecked(sharedPreferences.getBoolean("Remember_Login", false));
 
     }
 
@@ -92,7 +97,7 @@ public class PreferencesFragment extends Fragment {
         int reminder = 48;
         savePreferences("First_Name", mFirstName.getText().toString());
         savePreferences("Last_Name", mLastName.getText().toString());
-        savePreferences("Text_Notifications", mCheckbox.isChecked());
+        savePreferences("Text_Notifications", mTextNotifications.isChecked());
 
         if (mRentalPeriod.getText().toString() != null) {
             rental = Integer.parseInt(mRentalPeriod.getText().toString());
@@ -104,6 +109,7 @@ public class PreferencesFragment extends Fragment {
 
         savePreferences("Rental_Period", rental);
         savePreferences("Reminder_Threshold", reminder);
+        savePreferences("Remember_Login", mRememberMe.isChecked());
 
         Toast.makeText(getActivity().getApplicationContext(), "Settings Saved.", Toast.LENGTH_SHORT).show();
 

@@ -1,4 +1,4 @@
-package com.youngmike.mycinemobile;
+package com.youngmike.mycinemobile.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.youngmike.mycinemobile.R;
 
 /**
  * Created by Mike on 2/8/17.

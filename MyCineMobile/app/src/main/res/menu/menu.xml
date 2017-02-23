@@ -3,4 +3,6 @@
 
     <item android:title="Preferences"
         android:id="@+id/action_prefs" />
+    <item android:title="Friends"
+        android:id="@+id/action_friends" />
 </menu>

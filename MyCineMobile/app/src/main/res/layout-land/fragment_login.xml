@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:text="Welcome to MyCine Mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:textStyle="normal|bold" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:text="Returning User Login Here:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:textStyle="normal|italic" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_gravity="center" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/et_user_name"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:hint="Username / Email"
+        android:textAlignment="center" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/et_password"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:hint="Pasword" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <CheckBox
+        android:text="Remember Me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbx_remember_me"
+        android:textSize="24sp"
+        android:layout_gravity="center" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_gravity="center" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_login"
+        android:textSize="24sp"
+        android:layout_gravity="center" />
+</LinearLayout>

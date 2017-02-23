@@ -103,6 +103,13 @@
             android:layout_weight="1" />
     </LinearLayout>
 
+    <CheckBox
+        android:text="Remember Login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbx_remember_me"
+        android:layout_weight="0.50" />
+
     <Button
         android:text="Save"
         android:layout_width="match_parent"
