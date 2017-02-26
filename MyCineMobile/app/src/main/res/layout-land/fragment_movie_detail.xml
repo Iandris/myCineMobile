@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1">
+
+
+    <ImageView
+        android:layout_width="215dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/artnotfound"
+        android:id="@+id/img_disk_cover" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="211dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.15">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:id="@+id/textView26"
+            android:textSize="30sp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="107dp"
+            android:id="@+id/txt_movie_synopsis" />
+
+        <RatingBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_movie_stars"
+            android:layout_gravity="center" />
+
+        <ToggleButton
+            android:text="ToggleButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tgl_move_check_in_out"
+            android:textOff="Check Out"
+            android:textOn="Check In" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:id="@+id/spnr_movie_friends" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="142dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="156dp"
+            app:srcCompat="@drawable/user"
+            android:id="@+id/img_friend_profile_pic" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_friend_name" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_friend_address_1" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_friend_address_2" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_friend_phone" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_friend_email" />
+    </LinearLayout>
+
+</LinearLayout>

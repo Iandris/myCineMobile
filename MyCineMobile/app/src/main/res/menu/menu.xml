@@ -5,4 +5,6 @@
         android:id="@+id/action_prefs" />
     <item android:title="Friends"
         android:id="@+id/action_friends" />
+    <item android:title="Movie Detail"
+        android:id="@+id/action_movieDetail" />
 </menu>

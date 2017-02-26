@@ -4,15 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#02b7f9"
-        android:textColor="@android:color/black"
-        android:textStyle="normal|bold"
-        android:textSize="24sp"
-        android:id="@+id/txtView_ContactCount"/>
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

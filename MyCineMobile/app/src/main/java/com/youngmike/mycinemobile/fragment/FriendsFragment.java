@@ -1,6 +1,6 @@
 package com.youngmike.mycinemobile.fragment;
 
-import android.app.ListFragment;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 import com.youngmike.mycinemobile.R;
@@ -25,8 +24,19 @@ import java.util.ArrayList;
  */
 //TODO replace with cards when learned
 public class FriendsFragment extends Fragment {
+    OnFriendItemSelected mCallback;
     UserArrayAdapter mUserArrayAdapter;
     ListView mListView;
+
+    // The container Activity must implement this interface so the frag can deliver messages
+    public interface OnFriendItemSelected {
+        /**
+         * Called by HeadlinesFragment when a list_display item is selected
+         */
+        public void onFriendSelected(int position);
+    }
+
+
     /**
      * onCreate override - creates list for headlines using built in android simple list,
      * accesses the Array list from Singleton for Headline titles
@@ -52,13 +62,27 @@ public class FriendsFragment extends Fragment {
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //mCallback.onContactSelected(i);
+                //mCallback.onFriendSelected(i);
             }
         });
 
 
 
         return v;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception.
+        try {
+            mCallback = (OnFriendItemSelected) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFriendItemSelectedListener");
+        }
     }
 
     @Override
@@ -76,6 +100,7 @@ public class FriendsFragment extends Fragment {
         mListView.setAdapter(mUserArrayAdapter);
         mUserArrayAdapter.notifyDataSetChanged();
     }
+
 
     /**
      * ContactArrayAdapter inner class

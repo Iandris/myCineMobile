@@ -1,19 +1,20 @@
 package com.youngmike.mycinemobile.util;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import com.youngmike.mycinemobile.R;
-import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.Address;
+import com.youngmike.mycinemobile.entity.Rental;
 import com.youngmike.mycinemobile.entity.User;
+import com.youngmike.mycinemobile.entity.UserFriends;
+import com.youngmike.mycinemobile.entity.UserMovieLink;
+import com.youngmike.mycinemobile.entity.Wishlist;
 
+import org.joda.time.DateTime;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,22 +72,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 "CREATE UNIQUE INDEX idWishListLink_UNIQUE ON WishList (idWishListLink);";
 
 
-        //ADD to CRUD
         db.execSQL(CREATE_ADDRESSES_TABLE);
-
-        //ADD to CRUD
         db.execSQL(CREATE_USERS_TABLE);
-
-        //ADD to CRUD
         db.execSQL(CREATE_USERMOVIE_TABLE);
-
-        //ADD to CRUD
-        db.execSQL(CREATE_RENTALS_TABLE);
-
-        //ADD to CRUD
         db.execSQL(CREATE_USERFRIENDS_TABLE);
-
-        //ADD to CRUD
+        db.execSQL(CREATE_RENTALS_TABLE);
         db.execSQL(CREATE_WISHLIST_TABLE);
 
     }
@@ -98,9 +88,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
        // db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
     }
-
-    //TODO CRUD for each table/entity (equiv to DAO in HIBERNATE) 5 methods per entity
-
+    
     public List<Address> getAllAddresses() {
         String query = "SELECT * FROM ADDRESSES";
         List<Address> addresses = null;
@@ -221,6 +209,35 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return users;
     }
 
+    public User getUser(int userID) {
+        String query = "SELECT * FROM users WHERE id =  \"" + userID + "\"";
+
+        User usr = new User();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            usr.setFname(cursor.getString(1));
+            usr.setLname(cursor.getString(2));
+            usr.setEmail(cursor.getString(3));
+            usr.setReminderthreshold(Integer.parseInt(cursor.getString(4)));
+            usr.setDefaultrentalperiod(Integer.parseInt(cursor.getString(5)));
+            usr.setAddressid(Integer.parseInt(cursor.getString(6)));
+            usr.setCellnumber(cursor.getString(7));
+            usr.setFirebaseUID(cursor.getString(8));
+            cursor.close();
+        } else {
+            usr = null;
+        }
+        db.close();
+
+        return usr;
+    }
+
     public void addUser(User user) {
         ContentValues values = new ContentValues();
 
@@ -240,6 +257,375 @@ public class MyDBHandler extends SQLiteOpenHelper {
         // insert the record
         db.insert("users", null, values);
         // close the database
+        db.close();
+    }
+
+    public void updateUser (User user) {
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("fName", user.getFname());
+        values.put("lName", user.getLname());
+        values.put("email", user.getEmail());
+        values.put("reminderThreshold", user.getReminderthreshold());
+        values.put("defaultRentalPeriod", user.getDefaultrentalperiod());
+        values.put("id_address", user.getAddressid());
+        values.put("cell_number", user.getCellnumber());
+        values.put("firebaseUID", user.getFirebaseUID());
+
+        db.update("users", values, String.format("%s = ?", "id"), new String[]{String.valueOf(user.getUuid())});
+
+        db.close();
+    }
+
+    public void deleteUser (int userID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM users WHERE id =  \"" + userID + "\"";
+        db.delete("users", String.format("%s = ?", "id"), new String[]{String.valueOf(userID)});
+        db.close();
+    }
+
+    public List<UserMovieLink> getAllUserMovies () {
+        String query = "SELECT * FROM UserMovie";
+        ArrayList<UserMovieLink> links = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            UserMovieLink link = new UserMovieLink();
+            link.setUserid(Integer.parseInt(cursor.getString(1)));
+            link.setMovieid(Integer.parseInt(cursor.getString(2)));
+            link.setQuantity(Integer.parseInt(cursor.getString(3)));
+            link.setStarrating(Integer.parseInt(cursor.getString(4)));
+            links.add(link);
+        }
+        cursor.close();
+
+        db.close();
+
+        return links;
+    }
+
+    public UserMovieLink getUserMovieLink (int linkID) {
+        String query = "SELECT * FROM UserMovie WHERE id =  \"" + linkID + "\"";
+
+        UserMovieLink link = new UserMovieLink();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            link.setUserid(Integer.parseInt(cursor.getString(1)));
+            link.setMovieid(Integer.parseInt(cursor.getString(2)));
+            link.setQuantity(Integer.parseInt(cursor.getString(3)));
+            link.setStarrating(Integer.parseInt(cursor.getString(4)));
+            cursor.close();
+        } else {
+            link = null;
+        }
+        db.close();
+
+        return link;
+    }
+
+    public void addUserMovieLink (UserMovieLink link) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("userID", link.getUserid());
+        values.put("movieID", link.getMovieid());
+        values.put("quantity", link.getQuantity());
+        values.put("starRating", link.getStarrating());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.insert("UserMovie", null, values);
+        // close the database
+        db.close();
+    }
+
+    public void updateUserMovieLink (UserMovieLink link) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("userID", link.getUserid());
+        values.put("movieID", link.getMovieid());
+        values.put("quantity", link.getQuantity());
+        values.put("starRating", link.getStarrating());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.update("UserMovie", values, String.format("%s = ?", "linkID"), new String[]{String.valueOf(link.getLinkid())});
+        // close the database
+        db.close();
+    }
+
+    public void deleteUserMovieLink (int linkID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM UserMovie WHERE linkID =  \"" + linkID + "\"";
+        db.delete("UserMovie", String.format("%s = ?", "linkID"), new String[]{String.valueOf(linkID)});
+        db.close();
+    }
+
+    public List<UserFriends> getAllFriends() {
+        String query = "SELECT * FROM UserFriends";
+        ArrayList<UserFriends> friendLinks = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            UserFriends friend = new UserFriends();
+            friend.setFriendidA(Integer.parseInt(cursor.getString(1)));
+            friend.setFriendidB(Integer.parseInt(cursor.getString(2)));
+            friendLinks.add(friend);
+        }
+        cursor.close();
+
+        db.close();
+
+        return friendLinks;
+    }
+
+    public UserFriends getUserFriend (int friendID) {
+        String query = "SELECT * FROM UserFriends WHERE idConnector =  \"" + friendID + "\"";
+
+        UserFriends friend = new UserFriends();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            friend.setFriendidA(Integer.parseInt(cursor.getString(1)));
+            friend.setFriendidB(Integer.parseInt(cursor.getString(2)));
+            cursor.close();
+        } else {
+            friend = null;
+        }
+        db.close();
+
+        return friend;
+    }
+
+    public void addUserFriend (UserFriends friend) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("friend_a", friend.getFriendidA());
+        values.put("friend_b", friend.getFriendidB());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.insert("UserFriends", null, values);
+        // close the database
+        db.close();
+    }
+
+    public void updateUserFriend (UserFriends friend) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("friend_a", friend.getFriendidA());
+        values.put("friend_b", friend.getFriendidB());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.update("UserFriends", values, String.format("%s = ?", "idConnector"), new String[]{String.valueOf(friend.getIdConnector())});
+        // close the database
+        db.close();
+    }
+
+    public void deleteUserFriend (int friendID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM UserFriends WHERE idConnector =  \"" + friendID + "\"";
+        db.delete("UserFriends", String.format("%s = ?", "idConnector"), new String[]{String.valueOf(friendID)});
+        db.close();
+    }
+
+    public List<Rental> getAllRentals() {
+        String query = "SELECT * FROM Rentals";
+        ArrayList<Rental> rentals = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            Rental rental = new Rental();
+            rental.setRenterid(Integer.parseInt(cursor.getString(1)));
+            rental.setMovieid(Integer.parseInt(cursor.getString(2)));
+            rental.setDuedate(DateTime.parse(cursor.getString(3)));
+            rentals.add(rental);
+        }
+        cursor.close();
+
+        db.close();
+
+        return rentals;
+    }
+
+    public Rental getRental (int rentalID) {
+        String query = "SELECT * FROM Rentals WHERE idRentals =  \"" + rentalID + "\"";
+
+        Rental rental = new Rental();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            rental.setRenterid(Integer.parseInt(cursor.getString(1)));
+            rental.setMovieid(Integer.parseInt(cursor.getString(2)));
+            rental.setDuedate(DateTime.parse(cursor.getString(3)));
+            cursor.close();
+        } else {
+            rental = null;
+        }
+        db.close();
+
+        return rental;
+    }
+
+    public void addRental (Rental rental) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("renterID", rental.getRenterid());
+        values.put("movieID", rental.getMovieid());
+        values.put("dueDate", rental.getDuedate().toString());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.insert("Rentals", null, values);
+        // close the database
+        db.close();
+    }
+
+    public void updateRental (Rental rental) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("renterID", rental.getRenterid());
+        values.put("movieID", rental.getMovieid());
+        values.put("dueDate", rental.getDuedate().toString());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.update("Rentals", values, String.format("%s = ?", "idRentals"), new String[]{String.valueOf(rental.getIdrentals())});
+        // close the database
+        db.close();
+    }
+
+    public void deleteRental (int rentalID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM Rentals WHERE idRentals =  \"" + rentalID + "\"";
+        db.delete("Rentals", String.format("%s = ?", "idRentals"), new String[]{String.valueOf(rentalID)});
+        db.close();
+    }
+
+    public List<Wishlist> getAllWishlist () {
+        String query = "SELECT * FROM WishList";
+        ArrayList<Wishlist> rentals = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            Wishlist wish = new Wishlist();
+            wish.setUserid(Integer.parseInt(cursor.getString(1)));
+            wish.setMovieid(Integer.parseInt(cursor.getString(2)));
+            rentals.add(wish);
+        }
+        cursor.close();
+
+        db.close();
+
+        return rentals;
+    }
+
+    public Wishlist getWishList (int wishlistID) {
+        String query = "SELECT * FROM WishList WHERE idwishlistlink =  \"" + wishlistID + "\"";
+
+        Wishlist wish = new Wishlist();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            wish.setUserid(Integer.parseInt(cursor.getString(1)));
+            wish.setMovieid(Integer.parseInt(cursor.getString(2)));
+            cursor.close();
+        } else {
+            wish = null;
+        }
+        db.close();
+
+        return wish;
+    }
+
+    public void addWishList (Wishlist wish) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("userID", wish.getUserid());
+        values.put("movieID", wish.getMovieid());
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.insert("WishList", null, values);
+        // close the database
+        db.close();
+    }
+
+    public void updateWishList (Wishlist wish) {
+        ContentValues values = new ContentValues();
+
+        //content object primed with key-value pairs for the data columns extracted from the Product object
+        values.put("userID", wish.getUserid());
+        values.put("movieID", wish.getMovieid());
+
+
+        //  a reference to the database will be obtained
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // insert the record
+        db.update("WishList", values, String.format("%s = ?", "idwishlistlink"), new String[]{String.valueOf(wish.getIdwishlistlink())});
+        // close the database
+        db.close();
+    }
+
+    public void deleteWishList (int wishID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM WishList WHERE idwishlistlink =  \"" + wishID + "\"";
+        db.delete("WishList", String.format("%s = ?", "idwishlistlink"), new String[]{String.valueOf(wishID)});
         db.close();
     }
 }

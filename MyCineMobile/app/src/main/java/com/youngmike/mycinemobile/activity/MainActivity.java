@@ -13,11 +13,13 @@ import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.fragment.FriendsFragment;
 import com.youngmike.mycinemobile.fragment.LoginFragment;
 import com.youngmike.mycinemobile.fragment.MainScreenFragment;
+import com.youngmike.mycinemobile.fragment.MovieDetailFragment;
 import com.youngmike.mycinemobile.fragment.PreferencesFragment;
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        FriendsFragment.OnFriendItemSelected {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,28 @@ public class MainActivity extends AppCompatActivity {
                     transaction.commit();
                 }
                 return true;
+            case R.id.action_movieDetail:
+                TextView movieTitle = (TextView) findViewById(R.id.txt_movie_title);
+
+                if (movieTitle == null) {
+                    MovieDetailFragment newFragment = new MovieDetailFragment();
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                    transaction.replace(R.id.fragment_container, newFragment);
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+                }
+
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFriendSelected(int position) {
+            //TODO add some functionality to selecting friend
+
     }
 }
