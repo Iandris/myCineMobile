@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.youngmike.mycinemobile.R;
+import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
  * Created by Mike on 2/8/17.
@@ -27,6 +28,7 @@ public class MainScreenFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         TextView myText = (TextView) v.findViewById(R.id.txt_main);
+
 
         // Inflate the layout for this fragment
         return v;

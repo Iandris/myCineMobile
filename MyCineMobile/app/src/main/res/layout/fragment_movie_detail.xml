@@ -8,15 +8,15 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="181dp"
+            android:layout_width="137dp"
             android:layout_height="216dp"
-            app:srcCompat="@drawable/artnotfound"
+            app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_disk_cover"
-            android:layout_weight="1" />
+            android:contentDescription="disk art" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -74,13 +74,15 @@
 
         <ImageView
             android:layout_width="123dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/user"
-            android:id="@+id/img_friend_profile_pic" />
+            android:layout_height="match_parent"
+            app:srcCompat="@android:drawable/ic_menu_info_details"
+            android:id="@+id/img_friend_profile_pic"
+            android:contentDescription="friend photo"
+            android:layout_weight="0.26" />
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 

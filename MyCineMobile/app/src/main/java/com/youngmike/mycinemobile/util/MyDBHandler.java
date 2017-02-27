@@ -88,7 +88,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
        // db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
     }
-    
+
     public List<Address> getAllAddresses() {
         String query = "SELECT * FROM ADDRESSES";
         List<Address> addresses = null;

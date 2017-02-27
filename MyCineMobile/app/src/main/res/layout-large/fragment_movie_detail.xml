@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="272dp"
             android:layout_height="410dp"
-            app:srcCompat="@drawable/artnotfound"
+            app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_disk_cover" />
 
         <LinearLayout
@@ -75,8 +75,8 @@
 
         <ImageView
             android:layout_width="239dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/user"
+            android:layout_height="237dp"
+            app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_friend_profile_pic" />
 
         <LinearLayout

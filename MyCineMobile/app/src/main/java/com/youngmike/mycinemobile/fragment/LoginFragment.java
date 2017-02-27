@@ -56,14 +56,20 @@ public class LoginFragment extends Fragment {
                     dbHandler.addUser(user);
 
                 }
-                MainScreenFragment newFragment = new MainScreenFragment();
 
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
+                MainActivity main = (MainActivity)getActivity();
+                main.mIsLoggedIn = true;
+                main.selectItem(0);
+                main.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//
+//                MainScreenFragment newFragment = new MainScreenFragment();
+//
+//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//
+//                transaction.replace(R.id.fragment_container, newFragment);
+//                transaction.addToBackStack(null);
+//
+//                transaction.commit();
             }
         });
 

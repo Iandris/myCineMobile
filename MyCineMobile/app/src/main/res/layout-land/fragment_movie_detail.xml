@@ -9,16 +9,16 @@
 
 
     <ImageView
-        android:layout_width="215dp"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/artnotfound"
-        android:id="@+id/img_disk_cover" />
+        android:layout_width="178dp"
+        android:layout_height="267dp"
+        app:srcCompat="@android:drawable/ic_menu_info_details"
+        android:id="@+id/img_disk_cover"
+        android:layout_weight="0.25" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="211dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1.15">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
         <TextView
             android:text="TextView"
@@ -61,7 +61,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="156dp"
-            app:srcCompat="@drawable/user"
+            app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_friend_profile_pic" />
 
         <TextView
