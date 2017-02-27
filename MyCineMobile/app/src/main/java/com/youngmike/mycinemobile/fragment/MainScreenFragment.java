@@ -29,7 +29,8 @@ public class MainScreenFragment extends Fragment {
 
         TextView myText = (TextView) v.findViewById(R.id.txt_main);
 
-
+        MainActivity main = (MainActivity)getActivity();
+        main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
         // Inflate the layout for this fragment
         return v;
     }

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 import com.youngmike.mycinemobile.R;
@@ -66,7 +67,8 @@ public class FriendsFragment extends Fragment {
             }
         });
 
-
+        MainActivity main = (MainActivity)getActivity();
+        main.findViewById(R.id.fab).setVisibility(View.VISIBLE);
 
         return v;
     }

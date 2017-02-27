@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +31,7 @@ import com.youngmike.mycinemobile.util.MyDBHandler;
 
 public class MainActivity extends AppCompatActivity implements
         FriendsFragment.OnFriendItemSelected {
+    private CoordinatorLayout coordinatorLayout;
     private MyDBHandler dbHandler;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements
     private CharSequence mDrawerTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     public boolean mIsLoggedIn = false;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements
                 .getDefaultSharedPreferences(getApplicationContext());
         mIsLoggedIn = sharedPreferences.getBoolean("Remember_Login", false);
 
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mNavigationOptions = getResources().getStringArray(R.array.drawer_options);
@@ -81,15 +88,31 @@ public class MainActivity extends AppCompatActivity implements
             }
         };
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO Replace with add Friend functionality, use snack bar to show success/failure
+                Snackbar.make(view, "LOOK MA A SNACK BAR", Snackbar
+                        .LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (dbHandler == null) {
             dbHandler = new MyDBHandler(this, null, null, 1);
         }
 
-        LoginFragment firstFragment = new LoginFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, firstFragment).commit();
+        if (mIsLoggedIn) {
+            selectItem(0);
+            invalidateOptionsMenu();
+        } else {
+            LoginFragment firstFragment = new LoginFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+        }
 
     }
 
@@ -112,6 +135,16 @@ public class MainActivity extends AppCompatActivity implements
             menu.findItem(R.id.action_movieDetail).setVisible(false);
         } else if (!drawerOpen || mIsLoggedIn) {
             menu.findItem(R.id.action_movieDetail).setVisible(true);
+        }
+
+        TextView friendFrag = (TextView) findViewById(R.id.txtName);
+
+        if (drawerOpen) {
+            fab.setVisibility(View.INVISIBLE);
+        } else if (!drawerOpen && friendFrag != null){
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.INVISIBLE);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -171,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements
         } else if (position == 5) {
             //TODO create logout method
             mIsLoggedIn = false;
+
+            savePreferences("Remember_Login", mIsLoggedIn);
+
             // update the main content by replacing fragments
             getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
             getSupportActionBar().setHomeButtonEnabled(mIsLoggedIn);
@@ -184,6 +220,14 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavigationOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void savePreferences(String key, boolean value) {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
     }
 
     @Override

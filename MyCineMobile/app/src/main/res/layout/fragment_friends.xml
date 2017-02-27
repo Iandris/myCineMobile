@@ -16,4 +16,5 @@
         android:text="No items to display."
         android:id="@+id/android_empty"
         />
+
 </LinearLayout>

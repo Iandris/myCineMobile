@@ -59,17 +59,10 @@ public class LoginFragment extends Fragment {
 
                 MainActivity main = (MainActivity)getActivity();
                 main.mIsLoggedIn = true;
+                main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
                 main.selectItem(0);
                 main.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-//
-//                MainScreenFragment newFragment = new MainScreenFragment();
-//
-//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//
-//                transaction.replace(R.id.fragment_container, newFragment);
-//                transaction.addToBackStack(null);
-//
-//                transaction.commit();
+
             }
         });
 

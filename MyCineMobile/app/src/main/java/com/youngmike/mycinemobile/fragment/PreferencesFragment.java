@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.youngmike.mycinemobile.R;
+import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
  * Created by Mike on 2/8/17.
@@ -72,6 +73,9 @@ public class PreferencesFragment extends Fragment {
                 saveMyPreferences();
             }
         });
+
+        MainActivity main = (MainActivity)getActivity();
+        main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
 
         loadSavedPreferences();
         // Inflate the layout for this fragment

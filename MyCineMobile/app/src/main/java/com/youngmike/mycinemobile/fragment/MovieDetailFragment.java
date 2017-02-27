@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.youngmike.mycinemobile.R;
+import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
  * Created by Mike on 2/26/17.
@@ -58,6 +59,9 @@ public class MovieDetailFragment extends Fragment {
         mFriendAddress2 = (TextView) v.findViewById(R.id.txt_friend_address_2);
         mFriendPhone = (TextView) v.findViewById(R.id.txt_friend_phone);
         mFriendEmail = (TextView) v.findViewById(R.id.txt_friend_email);
+
+        MainActivity main = (MainActivity)getActivity();
+        main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
 
         return v;
     }
