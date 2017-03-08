@@ -13,6 +13,10 @@ public class UserMovieLink {
 
   private int starrating;
 
+  private String movieTitle;
+
+  private String movieSynopsis;
+
   public int getLinkid() {
     return linkid;
   }
@@ -49,4 +53,20 @@ public class UserMovieLink {
     this.starrating = starrating;
   }
 
+
+  public String getMovieSynopsis() {
+    return movieSynopsis;
+  }
+
+  public void setMovieSynopsis(String movieSynopsis) {
+    this.movieSynopsis = movieSynopsis;
+  }
+
+  public String getMovieTitle() {
+    return movieTitle;
+  }
+
+  public void setMovieTitle(String movieTitle) {
+    this.movieTitle = movieTitle;
+  }
 }

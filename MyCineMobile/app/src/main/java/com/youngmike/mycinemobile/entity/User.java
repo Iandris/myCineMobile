@@ -3,23 +3,14 @@ package com.youngmike.mycinemobile.entity;
 public class User {
 
   private int uuid;
-
   private String email;
-
   private int roleid;
-
   private String fname;
-
   private String lname;
-
   private int id_address;
-
   private String firebaseUID;
-
   private String cell_number;
-
   private int reminderthreshold;
-
   private int defaultrentalperiod;
 
   public int getUuid() {

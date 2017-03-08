@@ -3,9 +3,7 @@ package com.youngmike.mycinemobile.entity;
 public class MovieCastLink {
 
   private int idmoviecast;
-
   private int filmid;
-
   private int actorid;
 
   public int getIdmoviecast() {

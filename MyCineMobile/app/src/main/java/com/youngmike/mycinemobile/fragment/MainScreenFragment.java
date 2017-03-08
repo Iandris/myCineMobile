@@ -11,17 +11,22 @@ import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
+ * MainScreenFragment for MyCineMobile
  * Created by Mike on 2/8/17.
  */
 
 public class MainScreenFragment extends Fragment {
+    /**
+     * onCreateView method override - builds view for fragment, wires up widgets
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // If activity recreated (such as from screen rotate), restore
-        // the previous article selection set by onSaveInstanceState().
-        // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
         }
 
@@ -31,7 +36,6 @@ public class MainScreenFragment extends Fragment {
 
         MainActivity main = (MainActivity)getActivity();
         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-        // Inflate the layout for this fragment
         return v;
     }
 }

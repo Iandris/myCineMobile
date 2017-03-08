@@ -8,6 +8,10 @@ public class Wishlist {
 
   private int movieid;
 
+  private String movieTitle;
+
+  private String movieSynopsis;
+
   public int getIdwishlistlink() {
     return idwishlistlink;
   }
@@ -26,6 +30,22 @@ public class Wishlist {
 
   public void setMovieid(int movieid) {
     this.movieid = movieid;
+  }
+
+  public String getMovieSynopsis() {
+    return movieSynopsis;
+  }
+
+  public void setMovieSynopsis(String movieSynopsis) {
+    this.movieSynopsis = movieSynopsis;
+  }
+
+  public String getMovieTitle() {
+    return movieTitle;
+  }
+
+  public void setMovieTitle(String movieTitle) {
+    this.movieTitle = movieTitle;
   }
 
 }

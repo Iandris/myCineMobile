@@ -15,12 +15,21 @@ import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 
 /**
+ * LoginFragment for MyCineMobile
  * Created by Mike on 2/22/17.
  */
 
 public class LoginFragment extends Fragment {
 
     Button mLogin;
+
+    /**
+     * onCreateView method override - wires up widgets within the fragment view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,23 +48,13 @@ public class LoginFragment extends Fragment {
 
         mLogin = (Button) v.findViewById(R.id.btn_login);
         mLogin.setOnClickListener(new View.OnClickListener() {
+            /**
+             * onClick method override - inner method for logon button action
+             * @param v
+             */
             @Override
             public void onClick(View v) {
-                //TODO replace with actual user info table population
-                MyDBHandler dbHandler = new MyDBHandler(getActivity().getApplicationContext(), null, null, 1);
-                if (dbHandler.getAllUsers().size() < 1) {
-                    User user = new User();
-                    user.setFname("Mike");
-                    user.setLname("Young");
-                    user.setEmail("mtyoung@mail.com");
-                    user.setReminderthreshold(1);
-                    user.setDefaultrentalperiod(1);
-                    user.setAddressid(1);
-                    user.setCellnumber("0987654321");
-                    user.setFirebaseUID("12345678909876543212345678");
-                    dbHandler.addUser(user);
 
-                }
 
                 MainActivity main = (MainActivity)getActivity();
                 main.mIsLoggedIn = true;
@@ -66,9 +65,6 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        //TextView myText = (TextView) v.findViewById(R.id.txt_main);
-
-        // Inflate the layout for this fragment
         return v;
     }
 

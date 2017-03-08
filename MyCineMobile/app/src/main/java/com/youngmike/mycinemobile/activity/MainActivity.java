@@ -21,16 +21,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.youngmike.mycinemobile.entity.User;
+import com.youngmike.mycinemobile.entity.UserMovieLink;
+import com.youngmike.mycinemobile.entity.Wishlist;
 import com.youngmike.mycinemobile.fragment.FriendsFragment;
+import com.youngmike.mycinemobile.fragment.LibraryFragment;
 import com.youngmike.mycinemobile.fragment.LoginFragment;
 import com.youngmike.mycinemobile.fragment.MainScreenFragment;
 import com.youngmike.mycinemobile.fragment.MovieDetailFragment;
 import com.youngmike.mycinemobile.fragment.PreferencesFragment;
 import com.youngmike.mycinemobile.R;
+import com.youngmike.mycinemobile.fragment.WishlistFragment;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 
+/**
+ * MainActivity class for MyCineMobile
+ */
+
 public class MainActivity extends AppCompatActivity implements
-        FriendsFragment.OnFriendItemSelected {
+        FriendsFragment.OnFriendItemSelected,
+        WishlistFragment.OnWishListItemSelected,
+        LibraryFragment.OnLibraryItemSelected {
     private CoordinatorLayout coordinatorLayout;
     private MyDBHandler dbHandler;
     private DrawerLayout mDrawerLayout;
@@ -42,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements
     public boolean mIsLoggedIn = false;
     private FloatingActionButton fab;
 
+    /**
+     * onCreate method override, establishes coordinator/drawer layouts and uses fragment manager to
+     * swap fragments in/out
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +93,23 @@ public class MainActivity extends AppCompatActivity implements
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
+            /**
+             * onDrawerClosed method, occurs when drawer close occurs, resets title of action bar
+             * and invalidates options menu to force redraw
+             *
+             * @param view
+             */
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
+            /**
+             * onDrawerOpened method, occurs when drawer opens occurs, resets title of action bar
+             * and invalidates options menu to force redraw
+             *
+             * @param drawerView
+             */
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -105,26 +133,78 @@ public class MainActivity extends AppCompatActivity implements
             dbHandler = new MyDBHandler(this, null, null, 1);
         }
 
-        if (mIsLoggedIn) {
-            selectItem(0);
-            invalidateOptionsMenu();
-        } else {
-            LoginFragment firstFragment = new LoginFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+        //TODO replace with actual user info table population
+//        MyDBHandler dbHandler = new MyDBHandler(getActivity().getApplicationContext(), null, null, 1);
+        if (dbHandler.getAllUsers().size() < 1) {
+            User user = new User();
+            user.setFname("Mike");
+            user.setLname("Young");
+            user.setEmail("mtyoung@mail.com");
+            user.setReminderthreshold(1);
+            user.setDefaultrentalperiod(1);
+            user.setAddressid(1);
+            user.setCellnumber("0987654321");
+            user.setFirebaseUID("12345678909876543212345678");
+            dbHandler.addUser(user);
+        }
+
+        if(dbHandler.getAllUserMovies().size() < 1) {
+            UserMovieLink link = new UserMovieLink();
+            link.setQuantity(1);
+            link.setMovieid(1);
+            link.setStarrating(5);
+            link.setUserid(1);
+            link.setMovieSynopsis("Synopsis here");
+            link.setMovieTitle("Title here");
+            dbHandler.addUserMovieLink(link);
+        }
+
+        if (dbHandler.getAllWishlist().size() < 1) {
+            Wishlist list = new Wishlist();
+            list.setMovieTitle("A Wishlist Title here");
+            list.setMovieSynopsis("Wishlist synopsis here");
+            list.setUserid(1);
+            list.setMovieid(1);
+            dbHandler.addWishList(list);
+        }
+
+        if (savedInstanceState == null) {
+
+            if (mIsLoggedIn) {
+                selectItem(0);
+                invalidateOptionsMenu();
+            } else {
+                LoginFragment firstFragment = new LoginFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, firstFragment).commit();
+            }
         }
 
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /**
+     * DrawerItemClickListener class for MyCineMobile
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        /**
+         * onItemClick method override - handles the click to list items
+         * @param parent
+         * @param view
+         * @param position
+         * @param id
+         */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
+    /**
+     * onPrepareOptionsMenu method override - occurs on menu invalidate, redraws the drawer and
+     * shows/hides the floating action button
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
@@ -150,6 +230,11 @@ public class MainActivity extends AppCompatActivity implements
         return super.onPrepareOptionsMenu(menu);
     }
 
+    /**
+     * selectItem method - requires integer for position of item clicked, swaps fragments based on
+     * selection
+     * @param position
+     */
     public void selectItem(int position) {
         // update the main content by replacing fragments
         getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
@@ -162,9 +247,20 @@ public class MainActivity extends AppCompatActivity implements
                     .replace(R.id.fragment_container, firstFragment).commit();
 
         } else if (position == 1) {
-            //TODO add fragment for my library
-            Toast.makeText(getApplicationContext(), "Future Implementation of My Friends", Toast.LENGTH_LONG).show();
 
+            TextView libraryFrag = (TextView) findViewById(R.id.txt_library_movie_synopsis);
+
+            if (libraryFrag == null) {
+
+                LibraryFragment newFragment = new LibraryFragment();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
         } else if (position ==2) {
             TextView friendFrag = (TextView) findViewById(R.id.txtName);
 
@@ -180,24 +276,33 @@ public class MainActivity extends AppCompatActivity implements
                 transaction.commit();
             }
         } else if (position == 3) {
-            //TODO add fragment for my wishlist
-            Toast.makeText(getApplicationContext(), "Future Implementation of My Wishlist", Toast.LENGTH_LONG).show();
+
+            TextView wishlistFrag = (TextView) findViewById(R.id.txt_wishlist_movie_synopsis);
+
+            if (wishlistFrag == null) {
+
+                WishlistFragment newFragment = new WishlistFragment();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
 
         } else if (position == 4) {
             TextView prefFrag = (TextView) findViewById(R.id.txt_settings);
 
             if (prefFrag == null) {
-                // Create fragment and give it an argument for the selected article
+
                 PreferencesFragment newFragment = new PreferencesFragment();
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-                // Replace whatever is in the fragment_container view with this fragment,
-                // and add the transaction to the back stack so the user can navigate back
                 transaction.replace(R.id.fragment_container, newFragment);
                 transaction.addToBackStack(null);
 
-                // Commit the transaction
                 transaction.commit();
             }
 
@@ -207,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements
 
             savePreferences("Remember_Login", mIsLoggedIn);
 
-            // update the main content by replacing fragments
             getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
             getSupportActionBar().setHomeButtonEnabled(mIsLoggedIn);
             LoginFragment firstFragment = new LoginFragment();
@@ -216,12 +320,16 @@ public class MainActivity extends AppCompatActivity implements
 
         }
 
-        // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavigationOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
+    /**
+     * savePreferences method, stores key value pairs for shared preferences
+     * @param key
+     * @param value
+     */
     private void savePreferences(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
@@ -230,12 +338,21 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
     }
 
+    /**
+     * setTitle override - updates the title text on action bar
+     * @param title
+     */
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
 
+    /**
+     * onCreateOptionsMenu method override - inflates the menu layout for menu in action bar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -243,6 +360,11 @@ public class MainActivity extends AppCompatActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * onOptionsItemSelected method override - handles selection of menu items
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
@@ -272,27 +394,43 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * onFriendSelected method override - handles logic when a friend is selected from the list
+     * @param position
+     */
     @Override
     public void onFriendSelected(int position) {
             //TODO add some functionality to selecting friend
 
     }
 
-    /** When using the ActionBarDrawerToggle, you must call it during
-    * onPostCreate() and onConfigurationChanged()...
-     * */
-
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public void onWishlistItemSelected(int position){
+        //TODO add some functionality to selecting wishlist item
     }
 
     @Override
+    public void onLibraryItemSelected(int position){
+        //TODO add some functionality to selecting library item
+    }
+
+    /**
+     * onPostCreate method override - syncs the toggle state for drawer after restore instance state
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * onConfigurationChanged method override - passes configuration chagnes to the drawer
+     * @param newConfig
+     */
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 }

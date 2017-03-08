@@ -19,12 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * MyDBHandler class for MyCineMobile - using SQLiteOpenHelper creates local database if not exist
+ * also houses the CRUD functions of said database
  * Created by Mike on 2/20/17.
  */
 
 public class MyDBHandler extends SQLiteOpenHelper {
     private Context context;
 
+    /**
+     * constructor for MyDBHandler class, requires context, db name, factory and version for checking updates
+     * @param context
+     * @param name
+     * @param factory
+     * @param version
+     */
     public MyDBHandler(Context context, String name,
                        SQLiteDatabase.CursorFactory factory, int version) {
 
@@ -32,6 +41,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
     }
 
+    /**
+     * onCreate for building local database
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ADDRESSES_TABLE = "CREATE TABLE Addresses (idAddresses INTEGER " +
@@ -49,7 +62,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         String CREATE_USERMOVIE_TABLE = "CREATE TABLE UserMovie (linkID INTEGER PRIMARY KEY NOT NULL, " +
                 "userID INTEGER NOT NULL, movieID INTEGER NOT NULL, quantity INTEGER NOT NULL, " +
-                "starRating INTEGER, CONSTRAINT ownerID FOREIGN KEY (userID) REFERENCES users (id));" +
+                "starRating INTEGER, movieTitle VARCHAR(45) NOT NULL, movieSynopsis VARCHAR(128) NOT NULL, " +
+                "CONSTRAINT ownerID FOREIGN KEY (userID) REFERENCES users (id));" +
                 "CREATE UNIQUE INDEX linkID_UNIQUE ON UserMovie (linkID); " +
                 "CREATE INDEX ownerID_idx ON UserMovie (userID);";
 
@@ -68,7 +82,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 "CREATE INDEX renterID_idx ON Rentals (renterID);";
 
         String CREATE_WISHLIST_TABLE = "CREATE TABLE WishList (idWishListLink INTEGER PRIMARY KEY NOT NULL, " +
-                "userID INTEGER NOT NULL, movieID INTEGER NOT NULL);" +
+                "userID INTEGER NOT NULL, movieID INTEGER NOT NULL, movieTitle VARCHAR(45) NOT NULL, movieSynopsis VARCHAR(128) NOT NULL);" +
                 "CREATE UNIQUE INDEX idWishListLink_UNIQUE ON WishList (idWishListLink);";
 
 
@@ -81,6 +95,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * onUpgrade will drop and re-create tables as necessary for updated schema
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     //TODO finish adding on upgrade info for each table
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
@@ -89,9 +109,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public List<Address> getAllAddresses() {
+    /**
+     * getAllAddresses method, returns a list of Address Entites found in local database
+     * @return
+     */
+    public ArrayList<Address> getAllAddresses() {
         String query = "SELECT * FROM ADDRESSES";
-        List<Address> addresses = null;
+        ArrayList<Address> addresses = null;
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(query, null);
@@ -112,6 +136,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return addresses;
     }
 
+    /**
+     * getAddress method, returns an Address entity by searching for ID
+     * @param addressID
+     * @return
+     */
     public Address getAddress(int addressID) {
         String query = "SELECT * FROM ADDRESSES WHERE idAddresses =  \"" + addressID + "\"";
 
@@ -139,6 +168,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return addr;
     }
 
+    /**
+     * addAddress method, inserts an Address entity into local db
+     * @param addr
+     */
     public void addAddress (Address addr) {
         ContentValues values = new ContentValues();
 
@@ -158,6 +191,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateAddress method, updates an exisitng Address entity in local db
+     * @param addr
+     */
     public void updateAddress (Address addr) {
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -176,6 +213,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteAddress method, removeds an exising Address entity from local db
+     * @param addressID
+     */
     public void deleteAddress (int addressID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM ADDRESSES WHERE idAddresses =  \"" + addressID + "\"";
@@ -183,6 +224,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * getAllUsers method, returns a list of User entities int he db
+     * @return
+     */
     public ArrayList<User> getAllUsers() {
         String query = "SELECT * FROM users";
         ArrayList<User> users = new ArrayList<>();
@@ -209,6 +254,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return users;
     }
 
+    /**
+     * getUser method, returns a single User entity fromlocal db based on ID column
+     * @param userID
+     * @return
+     */
     public User getUser(int userID) {
         String query = "SELECT * FROM users WHERE id =  \"" + userID + "\"";
 
@@ -238,6 +288,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return usr;
     }
 
+    /**
+     * addUser method, inserts a new User entity into local db
+     * @param user
+     */
     public void addUser(User user) {
         ContentValues values = new ContentValues();
 
@@ -260,6 +314,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateUser method, updates an existing user entity in local db
+     * @param user
+     */
     public void updateUser (User user) {
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -281,6 +339,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteUser method, deletes an exising User entity from local db
+     * @param userID
+     */
     public void deleteUser (int userID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM users WHERE id =  \"" + userID + "\"";
@@ -288,7 +350,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<UserMovieLink> getAllUserMovies () {
+    /**
+     * getAllUserMovies method, returns list of UserMovie entities from local db
+     * @return
+     */
+    public ArrayList<UserMovieLink> getAllUserMovies () {
         String query = "SELECT * FROM UserMovie";
         ArrayList<UserMovieLink> links = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -301,6 +367,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
             link.setMovieid(Integer.parseInt(cursor.getString(2)));
             link.setQuantity(Integer.parseInt(cursor.getString(3)));
             link.setStarrating(Integer.parseInt(cursor.getString(4)));
+            link.setMovieTitle(cursor.getString((5)));
+            link.setMovieSynopsis(cursor.getString(6));
             links.add(link);
         }
         cursor.close();
@@ -310,6 +378,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return links;
     }
 
+    /**
+     * getUserMovieLink method, returns a single UserMovie entity based on ID from local db
+     * @param linkID
+     * @return
+     */
     public UserMovieLink getUserMovieLink (int linkID) {
         String query = "SELECT * FROM UserMovie WHERE id =  \"" + linkID + "\"";
 
@@ -326,6 +399,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
             link.setMovieid(Integer.parseInt(cursor.getString(2)));
             link.setQuantity(Integer.parseInt(cursor.getString(3)));
             link.setStarrating(Integer.parseInt(cursor.getString(4)));
+            link.setMovieTitle(cursor.getString((5)));
+            link.setMovieSynopsis(cursor.getString(6));
             cursor.close();
         } else {
             link = null;
@@ -335,6 +410,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return link;
     }
 
+    /**
+     * addUserMovieLink method, creates and inserts a new UserMovie entity into local db
+     * @param link
+     */
     public void addUserMovieLink (UserMovieLink link) {
         ContentValues values = new ContentValues();
 
@@ -343,6 +422,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("movieID", link.getMovieid());
         values.put("quantity", link.getQuantity());
         values.put("starRating", link.getStarrating());
+        values.put("movieTitle", link.getMovieTitle());
+        values.put("movieSynopsis", link.getMovieSynopsis());
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -353,6 +434,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateUserMovieLink method, updates an exising UserMovie enitity in local db
+     * @param link
+     */
     public void updateUserMovieLink (UserMovieLink link) {
         ContentValues values = new ContentValues();
 
@@ -361,6 +446,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("movieID", link.getMovieid());
         values.put("quantity", link.getQuantity());
         values.put("starRating", link.getStarrating());
+        values.put("movieTitle", link.getMovieTitle());
+        values.put("movieSynopsis", link.getMovieSynopsis());
+
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -371,6 +459,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteUserMovieLink method, deletes an exising UserMovie entity from local db
+     * @param linkID
+     */
     public void deleteUserMovieLink (int linkID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM UserMovie WHERE linkID =  \"" + linkID + "\"";
@@ -378,7 +470,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<UserFriends> getAllFriends() {
+    /**
+     * getAllFriends method, returns a list of UserFriend entites from local db
+     * @return
+     */
+    public ArrayList<UserFriends> getAllFriends() {
         String query = "SELECT * FROM UserFriends";
         ArrayList<UserFriends> friendLinks = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -398,6 +494,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return friendLinks;
     }
 
+    /**
+     * getUserFriend method, returns a single UserFriend entity based on ID from local db
+     * @param friendID
+     * @return
+     */
     public UserFriends getUserFriend (int friendID) {
         String query = "SELECT * FROM UserFriends WHERE idConnector =  \"" + friendID + "\"";
 
@@ -421,6 +522,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return friend;
     }
 
+    /**
+     * addUserFriend method, inserts a new UserFriend entity into local db
+     * @param friend
+     */
     public void addUserFriend (UserFriends friend) {
         ContentValues values = new ContentValues();
 
@@ -437,6 +542,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateUserFriend method, updates an existing UserFriend entity in local db
+     * @param friend
+     */
     public void updateUserFriend (UserFriends friend) {
         ContentValues values = new ContentValues();
 
@@ -453,6 +562,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteUserFriend method, removes an existing UserFriend entity from local db
+     * @param friendID
+     */
     public void deleteUserFriend (int friendID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM UserFriends WHERE idConnector =  \"" + friendID + "\"";
@@ -460,7 +573,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<Rental> getAllRentals() {
+    /**
+     * getAllRentals method, returns a list of all Rental entities from local db
+     * @return
+     */
+    public ArrayList<Rental> getAllRentals() {
         String query = "SELECT * FROM Rentals";
         ArrayList<Rental> rentals = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -481,6 +598,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return rentals;
     }
 
+    /**
+     * getRental method, returns a single Rental entity based on ID from local db
+     * @param rentalID
+     * @return
+     */
     public Rental getRental (int rentalID) {
         String query = "SELECT * FROM Rentals WHERE idRentals =  \"" + rentalID + "\"";
 
@@ -505,6 +627,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return rental;
     }
 
+    /**
+     * addRental method, inserts a new Rental entity into local db
+     * @param rental
+     */
     public void addRental (Rental rental) {
         ContentValues values = new ContentValues();
 
@@ -522,6 +648,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateRental method, updates an existing Rental Entity in local db
+     * @param rental
+     */
     public void updateRental (Rental rental) {
         ContentValues values = new ContentValues();
 
@@ -539,6 +669,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteRental method, removes an existing Rental entity from local db
+     * @param rentalID
+     */
     public void deleteRental (int rentalID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM Rentals WHERE idRentals =  \"" + rentalID + "\"";
@@ -546,7 +680,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<Wishlist> getAllWishlist () {
+    /**
+     * getAllWishList method, returns a list of WishList entities from local db
+     * @return
+     */
+    public ArrayList<Wishlist> getAllWishlist () {
         String query = "SELECT * FROM WishList";
         ArrayList<Wishlist> rentals = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -557,6 +695,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
             Wishlist wish = new Wishlist();
             wish.setUserid(Integer.parseInt(cursor.getString(1)));
             wish.setMovieid(Integer.parseInt(cursor.getString(2)));
+            wish.setMovieTitle(cursor.getString((3)));
+            wish.setMovieSynopsis(cursor.getString(4));
             rentals.add(wish);
         }
         cursor.close();
@@ -566,6 +706,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return rentals;
     }
 
+    /**
+     * getWishList method, returns a single WishList entity based on ID from local db
+     * @param wishlistID
+     * @return
+     */
     public Wishlist getWishList (int wishlistID) {
         String query = "SELECT * FROM WishList WHERE idwishlistlink =  \"" + wishlistID + "\"";
 
@@ -580,6 +725,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             wish.setUserid(Integer.parseInt(cursor.getString(1)));
             wish.setMovieid(Integer.parseInt(cursor.getString(2)));
+            wish.setMovieTitle(cursor.getString((3)));
+            wish.setMovieSynopsis(cursor.getString(4));
             cursor.close();
         } else {
             wish = null;
@@ -589,12 +736,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return wish;
     }
 
+    /**
+     * addWishlist method, inserts a new wishlist entity into local db
+     * @param wish
+     */
     public void addWishList (Wishlist wish) {
         ContentValues values = new ContentValues();
 
         //content object primed with key-value pairs for the data columns extracted from the Product object
         values.put("userID", wish.getUserid());
         values.put("movieID", wish.getMovieid());
+        values.put("movieTitle", wish.getMovieTitle());
+        values.put("movieSynopsis", wish.getMovieSynopsis());
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -605,12 +758,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * updateWishList method, updates an exising wishlist entity in local db
+     * @param wish
+     */
     public void updateWishList (Wishlist wish) {
         ContentValues values = new ContentValues();
 
         //content object primed with key-value pairs for the data columns extracted from the Product object
         values.put("userID", wish.getUserid());
         values.put("movieID", wish.getMovieid());
+        values.put("movieTitle", wish.getMovieTitle());
+        values.put("movieSynopsis", wish.getMovieSynopsis());
 
 
         //  a reference to the database will be obtained
@@ -622,6 +781,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * deleteWishlist method, removes an existing wishlist entity from local db
+     * @param wishID
+     */
     public void deleteWishList (int wishID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM WishList WHERE idwishlistlink =  \"" + wishID + "\"";

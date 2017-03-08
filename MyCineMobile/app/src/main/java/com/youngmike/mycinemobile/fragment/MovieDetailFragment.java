@@ -15,6 +15,7 @@ import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
+ * MovieDetailFragment for MyCineMobile
  * Created by Mike on 2/26/17.
  */
 

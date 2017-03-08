@@ -18,6 +18,7 @@ import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
 
 /**
+ * PreferencesFragment for MyCineMobile
  * Created by Mike on 2/8/17.
  */
 
@@ -31,6 +32,13 @@ public class PreferencesFragment extends Fragment {
     EditText mReminderThreshold;
     CheckBox mRememberMe;
 
+    /**
+     * onCreateView method override - wires up widges
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,6 +56,10 @@ public class PreferencesFragment extends Fragment {
 
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * onClick method override - validation for form entry and storage to shared preferences
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 if (mFirstName.getText().toString().isEmpty() || mFirstName.getText().toString() == "") {
@@ -78,10 +90,12 @@ public class PreferencesFragment extends Fragment {
         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
 
         loadSavedPreferences();
-        // Inflate the layout for this fragment
         return v;
     }
 
+    /**
+     * loadSavedPreferences method - loads data from shared preferences file
+     */
     private void loadSavedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -96,6 +110,9 @@ public class PreferencesFragment extends Fragment {
 
     }
 
+    /**
+     * saveMyPreferences method - stores information from preferences screen into shared preferences file
+     */
     public void saveMyPreferences() {
         int rental = 7;
         int reminder = 48;
@@ -118,20 +135,22 @@ public class PreferencesFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), "Settings Saved.", Toast.LENGTH_SHORT).show();
 
 
-        // Create fragment and give it an argument for the selected article
         MainScreenFragment newFragment = new MainScreenFragment();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.fragment_container, newFragment);
         transaction.addToBackStack(null);
 
-        // Commit the transaction
+
         transaction.commit();
     }
 
+    /**
+     * savePreferences method - requires two parameters String for key, and boolean for value
+     * @param key
+     * @param value
+     */
     private void savePreferences(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -140,6 +159,11 @@ public class PreferencesFragment extends Fragment {
         editor.commit();
     }
 
+    /**
+     * savePreferences method - requires two parameters String for key, and integer for value
+     * @param key
+     * @param value
+     */
     private void savePreferences(String key, int value) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -148,6 +172,11 @@ public class PreferencesFragment extends Fragment {
         editor.commit();
     }
 
+    /**
+     * savePreferences method - requires two parameters String for key, and String for value
+     * @param key
+     * @param value
+     */
     private void savePreferences(String key, String value) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());

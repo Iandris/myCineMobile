@@ -13,34 +13,32 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.youngmike.mycinemobile.activity.MainActivity;
-import com.youngmike.mycinemobile.entity.User;
-import com.youngmike.mycinemobile.util.MyDBHandler;
 import com.youngmike.mycinemobile.R;
+import com.youngmike.mycinemobile.activity.MainActivity;
+import com.youngmike.mycinemobile.entity.UserMovieLink;
+import com.youngmike.mycinemobile.util.MyDBHandler;
 
 import java.util.ArrayList;
 
 /**
- * FriendsFragment for MyCineMobile
- * Created by Mike on 2/22/17.
+ * Created by Mike on 3/8/17.
  */
-//TODO replace with cards when learned
-public class FriendsFragment extends Fragment {
-    OnFriendItemSelected mCallback;
-    UserArrayAdapter mUserArrayAdapter;
+
+public class LibraryFragment extends Fragment {
+    OnLibraryItemSelected mCallback;
+    LibraryFragment.LibraryListArrayAdapter mLibrarylistAdapter;
     ListView mListView;
 
     /**
      * onFriendItemSelected interface - creates a callback to MainActivity for when friends list
      * selection occurs
      */
-    public interface OnFriendItemSelected {
+    public interface OnLibraryItemSelected {
         /**
          * Called by HeadlinesFragment when a list_display item is selected
          */
-        public void onFriendSelected(int position);
+        public void onLibraryItemSelected(int position);
     }
-
 
     /**
      * onCreate override - creates list for headlines using built in android simple list,
@@ -51,7 +49,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_friends, container, false);
+        View v = inflater.inflate(R.layout.fragment_library, container, false);
 
         mListView = (ListView) v.findViewById(R.id.android_list);
         mListView.setEmptyView(v.findViewById(R.id.android_empty));
@@ -87,7 +85,7 @@ public class FriendsFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            mCallback = (OnFriendItemSelected) activity;
+            mCallback = (LibraryFragment.OnLibraryItemSelected) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFriendItemSelectedListener");
@@ -105,21 +103,20 @@ public class FriendsFragment extends Fragment {
 
         MyDBHandler db = new MyDBHandler(getActivity().getApplicationContext(), null, null, 1);
 
-        mUserArrayAdapter = new UserArrayAdapter(getActivity(),
-                layout, db.getAllUsers());
+        mLibrarylistAdapter = new LibraryListArrayAdapter(getActivity(),
+                layout, db.getAllUserMovies());
 
-        mListView.setAdapter(mUserArrayAdapter);
-        mUserArrayAdapter.notifyDataSetChanged();
+        mListView.setAdapter(mLibrarylistAdapter);
+        mLibrarylistAdapter.notifyDataSetChanged();
     }
-
 
     /**
      * ContactArrayAdapter inner class
      * Extends ArrayAdapter class forcing Contact class as list object type
      */
-    public class UserArrayAdapter extends ArrayAdapter<User> {
+    public class LibraryListArrayAdapter extends ArrayAdapter<UserMovieLink> {
 
-        private ArrayList<User> objects;
+        private ArrayList<UserMovieLink> objects;
 
         /**
          *  Override the constructor for ArrayAdapter
@@ -130,7 +127,7 @@ public class FriendsFragment extends Fragment {
          * @param resource
          * @param objects
          */
-        public UserArrayAdapter(Context context, int resource, ArrayList<User> objects) {
+        public LibraryListArrayAdapter(Context context, int resource, ArrayList<UserMovieLink> objects) {
             super(context, resource, objects);
             this.objects = objects;
         }
@@ -147,32 +144,24 @@ public class FriendsFragment extends Fragment {
 
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.list_item_friend, null);
+                view = inflater.inflate(R.layout.list_item_library, null);
             }
 
-            User contactObject = objects.get(position);
+            UserMovieLink contactObject = objects.get(position);
 
             if (contactObject != null) {
-                TextView mContactName = (TextView) view.findViewById(R.id.txtName);
-                TextView mContactPhone = (TextView) view.findViewById(R.id.txtPhone);
-                TextView mContactEmail = (TextView) view.findViewById(R.id.txtEmail);
+                TextView mMovieTitle = (TextView) view.findViewById(R.id.txt_library_movie_title);
+                TextView mMovieSynopsis = (TextView) view.findViewById(R.id.txt_library_movie_synopsis);
 
-                if (mContactName != null) {
-                    mContactName.setText(contactObject.getLname() + ", " + contactObject.getFname());
+                if (mMovieTitle != null) {
+                    mMovieTitle.setText(contactObject.getMovieTitle());
                 }
-                if (mContactEmail != null) {
-                    mContactEmail.setText(contactObject.getEmail());
+                if (mMovieSynopsis != null) {
+                    mMovieSynopsis.setText(contactObject.getMovieSynopsis());
                 }
-                if (mContactPhone != null) {
-                    mContactPhone.setText(contactObject.getCellnumber());
-                }
-
             }
 
             return view;
         }
     }
 }
-
-
-
