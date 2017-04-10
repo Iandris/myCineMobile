@@ -9,7 +9,7 @@
         android:layout_gravity="center" />
 
     <TextView
-        android:text="Welcome to MyCine Mobile"
+        android:text="@string/welcome_to_mycine_mobile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
@@ -23,7 +23,7 @@
         android:layout_gravity="center" />
 
     <TextView
-        android:text="Returning User Login Here:"
+        android:text="@string/returning_user_login_here"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
@@ -44,7 +44,7 @@
         android:id="@+id/et_user_name"
         android:textSize="24sp"
         android:layout_gravity="center"
-        android:hint="Username / Email"
+        android:hint="@string/username_email"
         android:textAlignment="center" />
 
     <Space
@@ -61,7 +61,7 @@
         android:textSize="24sp"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:hint="Pasword" />
+        android:hint="@string/pasword" />
 
     <Space
         android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
         android:layout_gravity="center" />
 
     <CheckBox
-        android:text="Remember Me"
+        android:text="@string/remember_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cbx_remember_me"
@@ -82,7 +82,7 @@
         android:layout_gravity="center" />
 
     <Button
-        android:text="Login"
+        android:text="@string/login"
         android:layout_width="142dp"
         android:layout_height="wrap_content"
         android:id="@+id/btn_login"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,7 +14,9 @@
         android:layout_height="267dp"
         app:srcCompat="@android:drawable/ic_menu_info_details"
         android:id="@+id/img_disk_cover"
-        android:layout_weight="0.25" />
+        android:layout_weight="0.20"
+        android:contentDescription="@string/image_placeholder"
+        tools:ignore="InefficientWeight" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,14 +24,14 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="51dp"
             android:id="@+id/textView26"
             android:textSize="30sp" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="107dp"
             android:id="@+id/txt_movie_synopsis" />
@@ -40,12 +43,12 @@
             android:layout_gravity="center" />
 
         <ToggleButton
-            android:text="ToggleButton"
+            android:text="@string/togglebutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tgl_move_check_in_out"
-            android:textOff="Check Out"
-            android:textOn="Check In" />
+            android:textOff="@string/check_out"
+            android:textOn="@string/check_in" />
 
         <Spinner
             android:layout_width="match_parent"
@@ -62,34 +65,35 @@
             android:layout_width="match_parent"
             android:layout_height="156dp"
             app:srcCompat="@android:drawable/ic_menu_info_details"
-            android:id="@+id/img_friend_profile_pic" />
+            android:id="@+id/img_friend_profile_pic"
+            android:contentDescription="@string/image_placeholder" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_friend_name" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_friend_address_1" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_friend_address_2" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_friend_phone" />
 
         <TextView
-            android:text="TextView"
+            android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_friend_email" />

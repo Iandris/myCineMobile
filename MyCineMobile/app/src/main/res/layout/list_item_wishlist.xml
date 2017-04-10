@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="fill_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="fill_horizontal"
@@ -40,7 +34,5 @@
                 android:textColor="#02f961"
                 android:id="@+id/txt_wishlist_movie_synopsis"/>
         </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

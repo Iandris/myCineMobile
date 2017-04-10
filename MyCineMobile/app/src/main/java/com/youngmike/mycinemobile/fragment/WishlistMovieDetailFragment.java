@@ -13,25 +13,20 @@ import android.widget.ToggleButton;
 
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
+import com.youngmike.mycinemobile.entity.UserMovieLink;
+import com.youngmike.mycinemobile.entity.Wishlist;
 
 /**
- * MovieDetailFragment for MyCineMobile
+ * LibraryMovieDetailFragment for MyCineMobile
  * Created by Mike on 2/26/17.
  */
 
-public class MovieDetailFragment extends Fragment {
+public class WishlistMovieDetailFragment extends Fragment {
     ImageView mCoverArt;
     ImageView mFriendIcon;
     TextView mMovieTitle;
     TextView mMovieSynopsis;
-    RatingBar mMovieRating;
-    ToggleButton mCheckInOut;
-    Spinner mFriendsSpinner;
-    TextView mFriendName;
-    TextView mFriendAddress1;
-    TextView mFriendAddress2;
-    TextView mFriendPhone;
-    TextView mFriendEmail;
+    MainActivity main;
 
     /**
      * onCreate override - creates list for headlines using built in android simple list,
@@ -42,24 +37,15 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        main = (MainActivity) getActivity();
+        View v = inflater.inflate(R.layout.fragment_wishlist_movie_detail, container, false);
 
         mCoverArt = (ImageView) v.findViewById(R.id.img_disk_cover);
         mFriendIcon = (ImageView) v.findViewById(R.id.img_friend_profile_pic);
         mMovieTitle = (TextView) v.findViewById(R.id.txt_movie_title);
         mMovieSynopsis = (TextView) v.findViewById(R.id.txt_movie_synopsis);
-        mMovieRating = (RatingBar) v.findViewById(R.id.rating_movie_stars);
-        mCheckInOut = (ToggleButton) v.findViewById(R.id.tgl_move_check_in_out);
-        mFriendsSpinner = (Spinner) v.findViewById(R.id.spnr_movie_friends);
 
-        //TODO add handler for spinner
-        //TODO add datasource/refresh for spinner content
-
-        mFriendName = (TextView) v.findViewById(R.id.txt_friend_name);
-        mFriendAddress1 = (TextView) v.findViewById(R.id.txt_friend_address_1);
-        mFriendAddress2 = (TextView) v.findViewById(R.id.txt_friend_address_2);
-        mFriendPhone = (TextView) v.findViewById(R.id.txt_friend_phone);
-        mFriendEmail = (TextView) v.findViewById(R.id.txt_friend_email);
+        loadMovieData();
 
         MainActivity main = (MainActivity)getActivity();
         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
@@ -67,5 +53,15 @@ public class MovieDetailFragment extends Fragment {
         return v;
     }
 
-    //TODO add method to pull friend data on spinner selection
+    public void loadMovieData() {
+        Bundle extras = getArguments();
+        int position = extras.getInt("listID");
+
+        Wishlist link = main.getDbHandler().getWishList(position + 1);
+
+        if (link != null) {
+            mMovieTitle.setText(link.getMovieTitle());
+            mMovieSynopsis.setText(link.getMovieSynopsis());
+        }
+    }
 }

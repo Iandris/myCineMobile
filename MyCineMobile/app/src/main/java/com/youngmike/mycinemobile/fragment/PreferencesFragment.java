@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
+import com.youngmike.mycinemobile.entity.User;
 
 /**
  * PreferencesFragment for MyCineMobile
@@ -31,6 +32,9 @@ public class PreferencesFragment extends Fragment {
     EditText mRentalPeriod;
     EditText mReminderThreshold;
     CheckBox mRememberMe;
+    EditText mUsername;
+    EditText mPassword;
+    MainActivity main;
 
     /**
      * onCreateView method override - wires up widges
@@ -53,32 +57,44 @@ public class PreferencesFragment extends Fragment {
         mRentalPeriod = (EditText) v.findViewById(R.id.et_RentalPeriod);
         mReminderThreshold = (EditText) v.findViewById(R.id.et_ReminderThreshold);
         mRememberMe = (CheckBox) v.findViewById(R.id.cbx_remember_me);
+        mUsername = (EditText) v.findViewById(R.id.et_prefUser);
+        mPassword = (EditText) v.findViewById(R.id.et_prefPassword);
 
 
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
+             mSaveButton.setOnClickListener(new View.OnClickListener() {
             /**
              * onClick method override - validation for form entry and storage to shared preferences
              * @param v
              */
             @Override
             public void onClick(View v) {
-                if (mFirstName.getText().toString().isEmpty() || mFirstName.getText().toString() == "") {
+                if (mFirstName.getText().toString().isEmpty() || mFirstName.getText().toString().equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "First Name is a required field.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (mLastName.getText().toString().isEmpty() || mLastName.getText().toString() == "") {
+                if (mLastName.getText().toString().isEmpty() || mLastName.getText().toString().equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Last Name is a required field.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (mRentalPeriod.getText().toString().isEmpty() || mRentalPeriod.getText().toString() == "") {
+                if (mRentalPeriod.getText().toString().isEmpty() || mRentalPeriod.getText().toString().equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Rental Period is a required field.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (mReminderThreshold.getText().toString().isEmpty() || mReminderThreshold.getText().toString() == "") {
+                if (mReminderThreshold.getText().toString().isEmpty() || mReminderThreshold.getText().toString().equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Reminder Threshold is a required field.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mUsername.getText().toString().isEmpty() || mUsername.getText().toString().equals("")) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Username is a required field.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mPassword.getText().toString().isEmpty() || mPassword.getText().toString().equals("")) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Password Threshold is a required field.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -86,7 +102,7 @@ public class PreferencesFragment extends Fragment {
             }
         });
 
-        MainActivity main = (MainActivity)getActivity();
+        main = (MainActivity)getActivity();
         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
 
         loadSavedPreferences();
@@ -107,7 +123,8 @@ public class PreferencesFragment extends Fragment {
         mRentalPeriod.setText(String.valueOf(sharedPreferences.getInt("Rental_Period", 7)));
         mReminderThreshold.setText(String.valueOf(sharedPreferences.getInt("Reminder_Threshold", 48)));
         mRememberMe.setChecked(sharedPreferences.getBoolean("Remember_Login", false));
-
+        mUsername.setText(sharedPreferences.getString("Username", ""));
+        mPassword.setText(sharedPreferences.getString("Password", ""));
     }
 
     /**
@@ -120,11 +137,11 @@ public class PreferencesFragment extends Fragment {
         savePreferences("Last_Name", mLastName.getText().toString());
         savePreferences("Text_Notifications", mTextNotifications.isChecked());
 
-        if (mRentalPeriod.getText().toString() != null) {
+        if (!mRentalPeriod.getText().toString().equals("")) {
             rental = Integer.parseInt(mRentalPeriod.getText().toString());
         }
 
-        if (mReminderThreshold.getText().toString() != null && mReminderThreshold.getText().toString() != "") {
+        if (!mReminderThreshold.getText().toString().equals("")) {
             reminder = Integer.parseInt(mReminderThreshold.getText().toString());
         }
 
@@ -132,18 +149,38 @@ public class PreferencesFragment extends Fragment {
         savePreferences("Reminder_Threshold", reminder);
         savePreferences("Remember_Login", mRememberMe.isChecked());
 
+        savePreferences("Username",mUsername.getText().toString());
+        savePreferences("Password",mPassword.getText().toString());
+
+        User primaryUser = main.getDbHandler().getUser(1);
+
+        if (primaryUser == null) {
+            User user = new User();
+            user.setFname(mFirstName.getText().toString());
+            user.setLname(mLastName.getText().toString());
+            user.setEmail(mUsername.getText().toString());
+            user.setReminderthreshold(Integer.parseInt(mReminderThreshold.getText().toString()));
+            user.setDefaultrentalperiod(Integer.parseInt(mRentalPeriod.getText().toString()));
+            user.setAddressid(1);
+            user.setCellnumber("0987654321");
+            user.setFirebaseUID("12345678909876543212345678");
+            main.getDbHandler().addUser(user);
+        }
+
         Toast.makeText(getActivity().getApplicationContext(), "Settings Saved.", Toast.LENGTH_SHORT).show();
 
 
-        MainScreenFragment newFragment = new MainScreenFragment();
+//        MainScreenFragment newFragment = new MainScreenFragment();
+//
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//
+//        transaction.replace(R.id.fragment_container, newFragment);
+//        transaction.addToBackStack(null);
+//
+//        transaction.commit();
+        main.mIsLoggedIn = true;
+        main.selectItem(0);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-
-        transaction.commit();
     }
 
     /**
@@ -156,7 +193,7 @@ public class PreferencesFragment extends Fragment {
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -169,7 +206,7 @@ public class PreferencesFragment extends Fragment {
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -182,6 +219,6 @@ public class PreferencesFragment extends Fragment {
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 }

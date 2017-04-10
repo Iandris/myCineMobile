@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class LibraryFragment extends Fragment {
     OnLibraryItemSelected mCallback;
-    LibraryFragment.LibraryListArrayAdapter mLibrarylistAdapter;
+    public LibraryListArrayAdapter mLibrarylistAdapter;
     ListView mListView;
 
     /**
@@ -37,7 +37,7 @@ public class LibraryFragment extends Fragment {
         /**
          * Called by HeadlinesFragment when a list_display item is selected
          */
-        public void onLibraryItemSelected(int position);
+        void onLibraryItemSelected(int position);
     }
 
     /**
@@ -65,7 +65,7 @@ public class LibraryFragment extends Fragment {
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //mCallback.onFriendSelected(i);
+                mCallback.onLibraryItemSelected(i);
             }
         });
 

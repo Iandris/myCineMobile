@@ -13,10 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.util.MyDBHandler;
-import com.youngmike.mycinemobile.R;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,6 @@ import java.util.ArrayList;
  * FriendsFragment for MyCineMobile
  * Created by Mike on 2/22/17.
  */
-//TODO replace with cards when learned
 public class FriendsFragment extends Fragment {
     OnFriendItemSelected mCallback;
     UserArrayAdapter mUserArrayAdapter;
@@ -67,7 +66,7 @@ public class FriendsFragment extends Fragment {
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //mCallback.onFriendSelected(i);
+                mCallback.onFriendSelected(i);
             }
         });
 

@@ -1,16 +1,21 @@
 package com.youngmike.mycinemobile.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,18 +26,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.youngmike.mycinemobile.api.ItemsItem;
+import com.youngmike.mycinemobile.com.mycine.TitlesItem;
 import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.entity.Wishlist;
 import com.youngmike.mycinemobile.fragment.FriendsFragment;
 import com.youngmike.mycinemobile.fragment.LibraryFragment;
+import com.youngmike.mycinemobile.fragment.LibraryMovieDetailFragment;
 import com.youngmike.mycinemobile.fragment.LoginFragment;
 import com.youngmike.mycinemobile.fragment.MainScreenFragment;
-import com.youngmike.mycinemobile.fragment.MovieDetailFragment;
 import com.youngmike.mycinemobile.fragment.PreferencesFragment;
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.fragment.WishlistFragment;
+import com.youngmike.mycinemobile.fragment.WishlistMovieDetailFragment;
 import com.youngmike.mycinemobile.util.MyDBHandler;
+import com.youngmike.mycinemobile.util.UPCLookup;
+
+import java.util.ArrayList;
 
 /**
  * MainActivity class for MyCineMobile
@@ -42,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements
         FriendsFragment.OnFriendItemSelected,
         WishlistFragment.OnWishListItemSelected,
         LibraryFragment.OnLibraryItemSelected {
-    private CoordinatorLayout coordinatorLayout;
+    private ActionBar mActionBar;
+    private CoordinatorLayout mCoordinatorLayout;
+    private int mDestination;
     private MyDBHandler dbHandler;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -52,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
     public boolean mIsLoggedIn = false;
     private FloatingActionButton fab;
+    ArrayList<TitlesItem> mItems;
+    private String upc;
 
     /**
      * onCreate method override, establishes coordinator/drawer layouts and uses fragment manager to
@@ -63,11 +78,19 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        if (dbHandler == null) {
+            dbHandler = new MyDBHandler(this, null, null, 1);
+        }
+
+
+        mActionBar = getSupportActionBar();
+
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
         mIsLoggedIn = sharedPreferences.getBoolean("Remember_Login", false);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -81,17 +104,17 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
-        getSupportActionBar().setHomeButtonEnabled(mIsLoggedIn);
+        mActionBar.setDisplayHomeAsUpEnabled(mIsLoggedIn);
+        mActionBar.setHomeButtonEnabled(mIsLoggedIn);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new android.support.v4.app.ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
+                this,
+                mDrawerLayout,
+                R.drawable.ic_drawer,
+                R.string.drawer_open,
+                R.string.drawer_close
         ) {
             /**
              * onDrawerClosed method, occurs when drawer close occurs, resets title of action bar
@@ -100,8 +123,7 @@ public class MainActivity extends AppCompatActivity implements
              * @param view
              */
             public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                updateActionBar(mTitle);
             }
 
             /**
@@ -111,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements
              * @param drawerView
              */
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                updateActionBar(mDrawerTitle);
             }
         };
 
@@ -120,53 +141,31 @@ public class MainActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Replace with add Friend functionality, use snack bar to show success/failure
-                Snackbar.make(view, "LOOK MA A SNACK BAR", Snackbar
-                        .LENGTH_LONG)
-                        .setAction("Action", null).show();
+                LibraryFragment libraryFrag = (LibraryFragment)getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
+
+                if (libraryFrag != null) {
+                    mDestination = 1;
+                    launchBarodeScan();
+                }
+
+                FriendsFragment friendFrag = (FriendsFragment)getSupportFragmentManager().findFragmentByTag("FRIENDS_FRAGMENT");
+
+                if (friendFrag != null) {
+                    Snackbar.make(view, "Future Implementation of add Friend", Snackbar
+                            .LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
+                WishlistFragment wishlistFrag = (WishlistFragment)getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
+
+                if (wishlistFrag != null) {
+                    mDestination = 3;
+                    launchBarodeScan();
+                }
             }
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (dbHandler == null) {
-            dbHandler = new MyDBHandler(this, null, null, 1);
-        }
-
-        //TODO replace with actual user info table population
-//        MyDBHandler dbHandler = new MyDBHandler(getActivity().getApplicationContext(), null, null, 1);
-        if (dbHandler.getAllUsers().size() < 1) {
-            User user = new User();
-            user.setFname("Mike");
-            user.setLname("Young");
-            user.setEmail("mtyoung@mail.com");
-            user.setReminderthreshold(1);
-            user.setDefaultrentalperiod(1);
-            user.setAddressid(1);
-            user.setCellnumber("0987654321");
-            user.setFirebaseUID("12345678909876543212345678");
-            dbHandler.addUser(user);
-        }
-
-        if(dbHandler.getAllUserMovies().size() < 1) {
-            UserMovieLink link = new UserMovieLink();
-            link.setQuantity(1);
-            link.setMovieid(1);
-            link.setStarrating(5);
-            link.setUserid(1);
-            link.setMovieSynopsis("Synopsis here");
-            link.setMovieTitle("Title here");
-            dbHandler.addUserMovieLink(link);
-        }
-
-        if (dbHandler.getAllWishlist().size() < 1) {
-            Wishlist list = new Wishlist();
-            list.setMovieTitle("A Wishlist Title here");
-            list.setMovieSynopsis("Wishlist synopsis here");
-            list.setUserid(1);
-            list.setMovieid(1);
-            dbHandler.addWishList(list);
-        }
 
         if (savedInstanceState == null) {
 
@@ -174,12 +173,26 @@ public class MainActivity extends AppCompatActivity implements
                 selectItem(0);
                 invalidateOptionsMenu();
             } else {
-                LoginFragment firstFragment = new LoginFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, firstFragment).commit();
+                if (sharedPreferences.getString("Username", "").equals("")) {
+                    selectItem(4);
+
+                } else {
+                    LoginFragment firstFragment = new LoginFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragment_container, firstFragment).commit();
+                }
             }
         }
 
+    }
+
+    /**
+     * updateActionbar requires CharSequence, updates title for Actionbar and invalidates options menu
+     * @param mDrawerTitle
+     */
+    private void updateActionBar(CharSequence mDrawerTitle) {
+        mActionBar.setTitle(mDrawerTitle);
+        invalidateOptionsMenu();
     }
 
     /**
@@ -207,24 +220,24 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        //TODO replace R.id.action_movieDetail with future reference to barcode reader
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 
-        if (!drawerOpen && !mIsLoggedIn) {
-            menu.findItem(R.id.action_movieDetail).setVisible(false);
-        } else if (!drawerOpen || mIsLoggedIn) {
-            menu.findItem(R.id.action_movieDetail).setVisible(true);
-        }
-
-        TextView friendFrag = (TextView) findViewById(R.id.txtName);
+        FriendsFragment friendFrag = (FriendsFragment) getSupportFragmentManager().findFragmentByTag("FRIENDS_FRAGMENT");
+        WishlistFragment wishlistFrag = (WishlistFragment)getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
+        LibraryFragment libraryFrag = (LibraryFragment)getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
 
         if (drawerOpen) {
             fab.setVisibility(View.INVISIBLE);
-        } else if (!drawerOpen && friendFrag != null){
-            fab.setVisibility(View.VISIBLE);
-        } else {
-            fab.setVisibility(View.INVISIBLE);
+        } else if (!drawerOpen) {
+            if (friendFrag != null && friendFrag.isVisible()){
+                fab.setVisibility(View.VISIBLE);
+            } else if (wishlistFrag != null && wishlistFrag.isVisible()){
+                fab.setVisibility(View.VISIBLE);
+            } else if (libraryFrag != null && libraryFrag.isVisible()) {
+                fab.setVisibility(View.VISIBLE);
+            } else {
+                fab.setVisibility(View.INVISIBLE);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -236,93 +249,118 @@ public class MainActivity extends AppCompatActivity implements
      * @param position
      */
     public void selectItem(int position) {
-        // update the main content by replacing fragments
-        getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
-        getSupportActionBar().setHomeButtonEnabled(mIsLoggedIn);
+        mActionBar.setDisplayHomeAsUpEnabled(mIsLoggedIn);
+        mActionBar.setHomeButtonEnabled(mIsLoggedIn);
+        Fragment newFragment = null;
+        String mFragmentTag = "";
 
-        if (position == 0) {
-            //TODO try auto-login when developed - on fail redirect to login fragment
-            MainScreenFragment firstFragment = new MainScreenFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, firstFragment).commit();
+        switch (position) {
+            case 0:
+                MainScreenFragment mainFrag = (MainScreenFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
 
-        } else if (position == 1) {
+                if (mainFrag == null) {
+                    newFragment = new MainScreenFragment();
+                    mFragmentTag = "MAIN_FRAGMENT";
+                } else {
+                    newFragment = mainFrag;
+                    mFragmentTag = "MAIN_FRAGMENT";
+                }
 
-            TextView libraryFrag = (TextView) findViewById(R.id.txt_library_movie_synopsis);
+                break;
+            case 1:
+                LibraryFragment libraryFrag = (LibraryFragment)getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
 
-            if (libraryFrag == null) {
+                if (libraryFrag == null) {
+                    newFragment = new LibraryFragment();
+                    mFragmentTag = "LIBRARY_FRAGMENT";
+                } else {
+                    newFragment = libraryFrag;
+                    mFragmentTag = "LIBRARY_FRAGMENT";
+                }
+                break;
+            case 2:
+                FriendsFragment friendFrag = (FriendsFragment) getSupportFragmentManager().findFragmentByTag("FRIENDS_FRAGMENT");
 
-                LibraryFragment newFragment = new LibraryFragment();
+                if (friendFrag == null) {
 
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    newFragment = new FriendsFragment();
+                    mFragmentTag = "FRIENDS_FRAGMENT";
+                } else {
+                    newFragment = friendFrag;
+                    mFragmentTag = "FRIENDS_FRAGMENT";
+                }
+                break;
+            case 3:
+                WishlistFragment wishlistFrag = (WishlistFragment)getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
 
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
 
-                transaction.commit();
-            }
-        } else if (position ==2) {
-            TextView friendFrag = (TextView) findViewById(R.id.txtName);
+                if (wishlistFrag == null) {
+                    newFragment = new WishlistFragment();
+                    mFragmentTag = "WISHLIST_FRAGMENT";
+                } else {
+                    newFragment = wishlistFrag;
+                    mFragmentTag = "WISHLIST_FRAGMENT";
+                }
+                break;
+            case 4:
+                PreferencesFragment prefFrag = (PreferencesFragment) getSupportFragmentManager().findFragmentByTag("PREFERENCES_FRAGMENT");
 
-            if (friendFrag == null) {
+                if (prefFrag == null) {
+                    newFragment = new PreferencesFragment();
+                    mFragmentTag = "PREFERENCES_FRAGMENT";
+                } else {
+                    newFragment = prefFrag;
+                    mFragmentTag = "PREFERENCES_FRAGMENT";
+                }
+                break;
+            case 5:
+                mIsLoggedIn = false;
 
-                FriendsFragment newFragment = new FriendsFragment();
+                savePreferences("Remember_Login", mIsLoggedIn);
 
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                mActionBar.setDisplayHomeAsUpEnabled(mIsLoggedIn);
+                mActionBar.setHomeButtonEnabled(mIsLoggedIn);
+                newFragment = new LoginFragment();
+                mFragmentTag = "LOGIN_FRAGMENT";
+                break;
+        }
 
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-            }
-        } else if (position == 3) {
-
-            TextView wishlistFrag = (TextView) findViewById(R.id.txt_wishlist_movie_synopsis);
-
-            if (wishlistFrag == null) {
-
-                WishlistFragment newFragment = new WishlistFragment();
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-            }
-
-        } else if (position == 4) {
-            TextView prefFrag = (TextView) findViewById(R.id.txt_settings);
-
-            if (prefFrag == null) {
-
-                PreferencesFragment newFragment = new PreferencesFragment();
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-            }
-
-        } else if (position == 5) {
-            //TODO create logout method
-            mIsLoggedIn = false;
-
-            savePreferences("Remember_Login", mIsLoggedIn);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(mIsLoggedIn);
-            getSupportActionBar().setHomeButtonEnabled(mIsLoggedIn);
-            LoginFragment firstFragment = new LoginFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, firstFragment).commit();
-
+        if (newFragment != null) {
+            swapFragment(newFragment, mFragmentTag);
         }
 
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavigationOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+        invalidateOptionsMenu();
+    }
+
+    protected void launchBarodeScan() {
+        Intent barcodeIntent = new Intent("com.google.zxing.client.android.SCAN");
+        barcodeIntent.putExtra("SCAN_MODE", "SCAN_MODE");
+
+        //ensure intent can resolve an available activity
+        if (barcodeIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(barcodeIntent, mDestination);
+
+        } else {
+            //assumes that no app is installed on virtual device
+            Toast.makeText(getApplicationContext(), "Please Install Google ZXING Barcode Scanner",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * swapFragment method, requires Fragment as parameter, uses Support Fragment Manager to swap
+     * @param newFragment
+     */
+    private void swapFragment(Fragment newFragment, String mFragTag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragment_container, newFragment, mFragTag);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     /**
@@ -335,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements
                 .getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -345,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        mActionBar.setTitle(mTitle);
     }
 
     /**
@@ -367,29 +405,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }
-
-        switch (item.getItemId()) {
-
-            case R.id.action_movieDetail:
-                TextView movieTitle = (TextView) findViewById(R.id.txt_movie_title);
-
-                if (movieTitle == null) {
-                    MovieDetailFragment newFragment = new MovieDetailFragment();
-
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-                    transaction.replace(R.id.fragment_container, newFragment);
-                    transaction.addToBackStack(null);
-
-                    transaction.commit();
-                }
-
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -400,18 +417,17 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onFriendSelected(int position) {
-            //TODO add some functionality to selecting friend
-
+        Toast.makeText(this, "Future implementaion of Edit/Show Friend Details", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onWishlistItemSelected(int position){
-        //TODO add some functionality to selecting wishlist item
+        switchToMovieDetail(false, position);
     }
 
     @Override
     public void onLibraryItemSelected(int position){
-        //TODO add some functionality to selecting library item
+        switchToMovieDetail(true, position);
     }
 
     /**
@@ -432,5 +448,114 @@ public class MainActivity extends AppCompatActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void switchToMovieDetail(Boolean library, int position) {
+
+        TextView movieTitle = (TextView) findViewById(R.id.txt_movie_title);
+
+            Fragment newFragment;
+            if (movieTitle == null) {
+                if (library) {
+                    newFragment = new LibraryMovieDetailFragment();
+                } else {
+                    newFragment = new WishlistMovieDetailFragment();
+                }
+
+                Bundle data = new Bundle();
+                data.putInt("listID", position);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                newFragment.setArguments(data);
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_OK ) {
+            upc = intent.getStringExtra("SCAN_RESULT");
+            mDestination = requestCode;
+            new UPCLookupTask().execute(upc);
+        } else {
+            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+            selectItem(0);
+        }
+
+    }
+
+    public MyDBHandler getDbHandler() {
+        return dbHandler;
+    }
+
+    private class UPCLookupTask extends AsyncTask<String,Void,UserMovieLink> {
+        @Override
+        protected UserMovieLink doInBackground(String... upc) {
+            return new UPCLookup().checkCode(upc[0]);
+        }
+
+        /**
+         * Runs on the UI thread before {@link #doInBackground}.
+         *
+         * @see #onPostExecute
+         * @see #doInBackground
+         */
+        @Override
+        protected void onPreExecute() {
+            // showing a progress bar in the user interface
+            super.onPreExecute();
+        }
+
+        /**
+         * Runs on the UI thread after {@link #publishProgress} is invoked.
+         * The specified values are the values passed to {@link #publishProgress}.
+         *
+         * @param values The values indicating progress.
+         * @see #publishProgress
+         * @see #doInBackground
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+            super.onProgressUpdate(values);
+        }
+
+        /*
+          runs after doInBackground()
+         */
+        @Override
+        protected void onPostExecute(UserMovieLink items) {
+            if (items != null) {
+                Toast.makeText(getApplicationContext(), items.getMovieTitle() + " added/updated", Toast.LENGTH_LONG).show();
+
+                if (mDestination == 1) {
+
+                    dbHandler.addUserMovieLink(items);
+
+                    mItems = null;
+                    LibraryFragment library = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
+                    library.mLibrarylistAdapter.notifyDataSetChanged();
+
+                } else if (mDestination == 3) {
+                    Wishlist list = new Wishlist();
+                    list.setMovieid(items.getMovieid());
+                    list.setUserid(1);
+                    list.setMovieTitle(items.getMovieTitle());
+                    list.setMovieSynopsis(items.getMovieSynopsis());
+
+                    dbHandler.addWishList(list);
+
+                    mItems = null;
+
+                }
+                selectItem(0);
+            } else {
+                Toast.makeText(getApplicationContext(), "No title found for scanned barcode", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

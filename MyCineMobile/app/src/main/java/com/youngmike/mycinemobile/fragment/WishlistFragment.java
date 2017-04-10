@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,8 @@ import java.util.ArrayList;
 
 public class WishlistFragment extends Fragment {
     OnWishListItemSelected mCallback;
-    WishlistFragment.WishListArrayAdapter mWishlistAdapter;
+    public WishListArrayAdapter mWishlistAdapter;
+    MainActivity main;
     ListView mListView;
 
     /**
@@ -50,6 +52,8 @@ public class WishlistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        main = (MainActivity) getActivity();
+
         View v = inflater.inflate(R.layout.fragment_wishlist, container, false);
 
         mListView = (ListView) v.findViewById(R.id.android_list);
@@ -66,7 +70,7 @@ public class WishlistFragment extends Fragment {
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //mCallback.onFriendSelected(i);
+                mCallback.onWishlistItemSelected(i);
             }
         });
 
@@ -102,13 +106,18 @@ public class WishlistFragment extends Fragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
-        MyDBHandler db = new MyDBHandler(getActivity().getApplicationContext(), null, null, 1);
 
         mWishlistAdapter = new WishListArrayAdapter(getActivity(),
-                layout, db.getAllWishlist());
+                layout, main.getDbHandler().getAllWishlist() );
 
         mListView.setAdapter(mWishlistAdapter);
         mWishlistAdapter.notifyDataSetChanged();
+    }
+
+    public void update() {
+        mWishlistAdapter.notifyDataSetChanged();
+        Log.i("HMM", "UPDATED");
+        //this.getView().invalidate();
     }
 
     /**

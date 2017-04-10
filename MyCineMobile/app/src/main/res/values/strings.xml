@@ -10,4 +10,33 @@
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="no_items_to_display">No items to display.</string>
+    <string name="textview">TextView</string>
+    <string name="togglebutton">ToggleButton</string>
+    <string name="check_out">Check Out</string>
+    <string name="check_in">Check In</string>
+    <string name="image_placeholder">image placeholder</string>
+    <string name="welcome_to_mycine_mobile">Welcome to MyCine Mobile</string>
+    <string name="returning_user_login_here">Returning User Login Here:</string>
+    <string name="username_email">Username / Email</string>
+    <string name="pasword">Pasword</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="login">Login</string>
+    <string name="dot">•</string>
+    <string name="title">Title</string>
+    <string name="new_releases">Newest Additions</string>
+    <string name="upcoming_releases">Older Additions</string>
+    <string name="disk_art">disk art</string>
+    <string name="my_preferences">My Preferences</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="send_text_notifications">Send Text Notifications</string>
+    <string name="rental_period_in_days">Rental Period in Days</string>
+    <string name="rental_period">Rental Period</string>
+    <string name="reminder_threshold_in_hours">Reminder Threshold in hours</string>
+    <string name="reminder_threshold">Reminder Threshold</string>
+    <string name="remember_login">Remember Login</string>
+    <string name="save">Save</string>
+    <string name="movie_detail">Movie Detail</string>
+    <string name="Password">Password</string>
 </resources>

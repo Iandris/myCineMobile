@@ -102,10 +102,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @param newVersion
      */
     @Override
-    //TODO finish adding on upgrade info for each table
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
                           int newVersion) {
-       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
     }
 
@@ -384,7 +382,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @return
      */
     public UserMovieLink getUserMovieLink (int linkID) {
-        String query = "SELECT * FROM UserMovie WHERE id =  \"" + linkID + "\"";
+        String query = "SELECT * FROM UserMovie WHERE linkID =  \"" + linkID + "\"";
 
         UserMovieLink link = new UserMovieLink();
 

@@ -16,7 +16,7 @@
             android:layout_height="216dp"
             app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_disk_cover"
-            android:contentDescription="disk art" />
+            android:contentDescription="@string/disk_art" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,14 +24,14 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_movie_title"
                 android:textSize="30sp" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_movie_synopsis"
@@ -55,12 +55,12 @@
         android:layout_height="wrap_content" />
 
     <ToggleButton
-        android:text="ToggleButton"
+        android:text="@string/togglebutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tgl_move_check_in_out"
-        android:textOff="Check Out"
-        android:textOn="Check In" />
+        android:textOff="@string/check_out"
+        android:textOn="@string/check_in" />
 
     <Spinner
         android:layout_width="match_parent"
@@ -77,7 +77,7 @@
             android:layout_height="match_parent"
             app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/img_friend_profile_pic"
-            android:contentDescription="friend photo"
+            android:contentDescription="@string/image_placeholder"
             android:layout_weight="0.26" />
 
         <LinearLayout
@@ -87,35 +87,35 @@
             android:layout_weight="1">
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_friend_name"
                 android:textSize="18sp" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_friend_address_1"
                 android:textSize="18sp" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_friend_address_2"
                 android:textSize="18sp" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_friend_phone"
                 android:textSize="18sp" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_friend_email"
