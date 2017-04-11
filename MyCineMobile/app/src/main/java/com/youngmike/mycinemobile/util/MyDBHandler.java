@@ -11,12 +11,9 @@ import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.entity.UserFriends;
 import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.entity.Wishlist;
-
 import org.joda.time.DateTime;
-
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * MyDBHandler class for MyCineMobile - using SQLiteOpenHelper creates local database if not exist
@@ -25,7 +22,6 @@ import java.util.List;
  */
 
 public class MyDBHandler extends SQLiteOpenHelper {
-    private Context context;
 
     /**
      * constructor for MyDBHandler class, requires context, db name, factory and version for checking updates
@@ -393,6 +389,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         //only the first match will then be returned, contained within a
         // new instance of our Product data model class
         if (cursor.moveToFirst()) {
+            link.setLinkid(Integer.parseInt(cursor.getString(0)));
             link.setUserid(Integer.parseInt(cursor.getString(1)));
             link.setMovieid(Integer.parseInt(cursor.getString(2)));
             link.setQuantity(Integer.parseInt(cursor.getString(3)));
@@ -447,12 +444,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("movieTitle", link.getMovieTitle());
         values.put("movieSynopsis", link.getMovieSynopsis());
 
-
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
 
         // insert the record
-        db.update("UserMovie", values, String.format("%s = ?", "linkID"), new String[]{String.valueOf(link.getLinkid())});
+        int i = db.update("UserMovie", values, String.format("%s = ?", "linkID"), new String[]{String.valueOf(link.getLinkid())});
         // close the database
         db.close();
     }
@@ -584,6 +580,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
             Rental rental = new Rental();
+            rental.setIdrentals(Integer.parseInt(cursor.getString(0)));
             rental.setRenterid(Integer.parseInt(cursor.getString(1)));
             rental.setMovieid(Integer.parseInt(cursor.getString(2)));
             rental.setDuedate(DateTime.parse(cursor.getString(3)));
@@ -613,6 +610,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         //only the first match will then be returned, contained within a
         // new instance of our Product data model class
         if (cursor.moveToFirst()) {
+            rental.setIdrentals(Integer.parseInt(cursor.getString(0)));
             rental.setRenterid(Integer.parseInt(cursor.getString(1)));
             rental.setMovieid(Integer.parseInt(cursor.getString(2)));
             rental.setDuedate(DateTime.parse(cursor.getString(3)));
@@ -633,6 +631,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         //content object primed with key-value pairs for the data columns extracted from the Product object
+       // values.put("idRentals", rental.getIdrentals());
         values.put("renterID", rental.getRenterid());
         values.put("movieID", rental.getMovieid());
         values.put("dueDate", rental.getDuedate().toString());
@@ -671,11 +670,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * deleteRental method, removes an existing Rental entity from local db
      * @param rentalID
      */
-    public void deleteRental (int rentalID) {
+    public boolean deleteRental (int rentalID) {
+        boolean result = false;
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DELETE FROM Rentals WHERE idRentals =  \"" + rentalID + "\"";
-        db.delete("Rentals", String.format("%s = ?", "idRentals"), new String[]{String.valueOf(rentalID)});
+        String query = "Select * FROM Rentals WHERE idRentals = " + rentalID;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if(cursor.moveToFirst()) {
+            db.delete("Rentals", String.format("%s = ?", "idRentals"), new String[]{String.valueOf(rentalID)});
+            result = true;
+        }
         db.close();
+        return result;
     }
 
     /**
@@ -783,10 +790,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * deleteWishlist method, removes an existing wishlist entity from local db
      * @param wishID
      */
-    public void deleteWishList (int wishID) {
+    public boolean deleteWishList (int wishID) {
+        boolean result = false;
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DELETE FROM WishList WHERE idwishlistlink =  \"" + wishID + "\"";
-        db.delete("WishList", String.format("%s = ?", "idwishlistlink"), new String[]{String.valueOf(wishID)});
+        String query = "Select * FROM WishList WHERE idwishlistlink =  \"" + wishID + "\"";
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if(cursor.moveToFirst()) {
+            db.delete("WishList", String.format("%s = ?", "idwishlistlink"), new String[]{String.valueOf(wishID)});
+            result = true;
+        }
         db.close();
+        return result;
     }
 }

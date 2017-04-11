@@ -74,7 +74,6 @@ public class LoginFragment extends Fragment {
                         savePreferences("Remember_Login", mRemember.isChecked());
                         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
                         main.selectItem(0);
-                        //main.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                     } else {
                         Toast.makeText(main.getApplicationContext(), "Incorrect Username/Password", Toast.LENGTH_LONG).show();
                     }

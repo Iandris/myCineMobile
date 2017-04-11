@@ -2,7 +2,6 @@ package com.youngmike.mycinemobile.entity;
 
 public class UserMovieLink {
 
-
   private int linkid;
 
   private int userid;
@@ -19,6 +18,10 @@ public class UserMovieLink {
 
   public int getLinkid() {
     return linkid;
+  }
+
+  public void setLinkid(int linkid){
+    this.linkid = linkid;
   }
 
   public int getUserid() {

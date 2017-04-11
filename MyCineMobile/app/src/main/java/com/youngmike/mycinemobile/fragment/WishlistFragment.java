@@ -116,7 +116,7 @@ public class WishlistFragment extends Fragment {
 
     public void update() {
         mWishlistAdapter.notifyDataSetChanged();
-        Log.i("HMM", "UPDATED");
+
         //this.getView().invalidate();
     }
 

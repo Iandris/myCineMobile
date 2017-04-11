@@ -1,28 +1,28 @@
 package com.youngmike.mycinemobile.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
-import com.youngmike.mycinemobile.entity.Address;
+import com.youngmike.mycinemobile.entity.Rental;
 import com.youngmike.mycinemobile.entity.User;
-import com.youngmike.mycinemobile.entity.UserFriends;
 import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.util.MyDBHandler;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
@@ -33,19 +33,22 @@ import java.util.ArrayList;
 
 public class LibraryMovieDetailFragment extends Fragment {
     ImageView mCoverArt;
-    ImageView mFriendIcon;
     TextView mMovieTitle;
     TextView mMovieSynopsis;
     RatingBar mMovieRating;
     ToggleButton mCheckInOut;
     Spinner mFriendsSpinner;
-    TextView mFriendName;
-    TextView mFriendAddress1;
-    TextView mFriendAddress2;
-    TextView mFriendPhone;
-    TextView mFriendEmail;
+    Button mRentButton;
     ArrayAdapter mAdapter;
     MainActivity main;
+    Rental thisRent;
+    int movieID;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("movieID", movieID);
+        super.onSaveInstanceState(outState);
+    }
 
     /**
      * onCreate override - creates list for headlines using built in android simple list,
@@ -58,77 +61,112 @@ public class LibraryMovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         main = (MainActivity) getActivity();
+        thisRent = null;
+
+        if(savedInstanceState != null) {
+            movieID = savedInstanceState.getInt("movieID");
+        }
 
         View v = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
         mCoverArt = (ImageView) v.findViewById(R.id.img_disk_cover);
-        mFriendIcon = (ImageView) v.findViewById(R.id.img_friend_profile_pic);
         mMovieTitle = (TextView) v.findViewById(R.id.txt_movie_title);
         mMovieSynopsis = (TextView) v.findViewById(R.id.txt_movie_synopsis);
         mMovieRating = (RatingBar) v.findViewById(R.id.rating_movie_stars);
         mCheckInOut = (ToggleButton) v.findViewById(R.id.tgl_move_check_in_out);
         mFriendsSpinner = (Spinner) v.findViewById(R.id.spnr_movie_friends);
+        mRentButton = (Button) v.findViewById(R.id.btn_rent);
 
-        mFriendName = (TextView) v.findViewById(R.id.txt_friend_name);
-        mFriendAddress1 = (TextView) v.findViewById(R.id.txt_friend_address_1);
-        mFriendAddress2 = (TextView) v.findViewById(R.id.txt_friend_address_2);
-        mFriendPhone = (TextView) v.findViewById(R.id.txt_friend_phone);
-        mFriendEmail = (TextView) v.findViewById(R.id.txt_friend_email);
+        mRentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyDBHandler handler = main.getDbHandler();
+                Rental rent = new Rental();
+                rent.setRenterid(mFriendsSpinner.getSelectedItemPosition() + 1);
+                rent.setMovieid(movieID + 1);
+                DateTime due = DateTime.now().plusDays(handler.getUser(1).getDefaultrentalperiod());
+                rent.setDuedate(due);
+                handler.addRental(rent);
+
+                Toast.makeText(getActivity().getApplicationContext(), "Successfully Rented", Toast.LENGTH_LONG).show();
+                main.onBackPressed();
+            }
+        });
+
+        mCheckInOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkoutToggle();
+            }
+        });
+
+        mMovieRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                MyDBHandler handler = main.getDbHandler();
+                UserMovieLink link = handler.getUserMovieLink(movieID + 1);
+
+                if (link != null) {
+                    link.setStarrating(Math.round(mMovieRating.getRating()));
+                    handler.updateUserMovieLink(link);
+                }
+            }
+        });
 
         main.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
 
         loadMovieData();
         populateFriendsList();
 
-        mFriendsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= 0) {
-                    User user = ((MainActivity) getActivity()).getDbHandler().getUser(position + 1);
-                    mFriendName.setText(user.getFname() + " " + user.getLname());
-                    Address addr = ((MainActivity) getActivity()).getDbHandler().getAddress(user.getAddressid());
-
-                    if (addr != null) {
-                        mFriendAddress1.setText(addr.getStreetaddress1());
-                        mFriendAddress2.setText(addr.getStreetaddress2());
-                    } else {
-                        mFriendAddress1.setText("unknown");
-                        mFriendAddress2.setText("unknown");
-                    }
-                    mFriendPhone.setText(user.getCellnumber());
-                    mFriendEmail.setText(user.getEmail());
-                } else {
-                    mFriendName.setText("");
-                    mFriendAddress1.setText("");
-                    mFriendAddress2.setText("");
-                    mFriendPhone.setText("");
-                    mFriendEmail.setText("");
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mFriendName.setText("");
-                mFriendAddress1.setText("");
-                mFriendAddress2.setText("");
-                mFriendPhone.setText("");
-                mFriendEmail.setText("");
-            }
-        });
+       checkoutToggle();
 
         return v;
     }
 
+    public void checkoutToggle() {
+        if (mCheckInOut.isChecked()) {
+            mFriendsSpinner.setVisibility(View.VISIBLE);
+            mRentButton.setVisibility(View.VISIBLE);
+        } else {
+            if(thisRent != null) {
+                MyDBHandler handler = main.getDbHandler();
+                if (handler.deleteRental(thisRent.getIdrentals())) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Rental Cancelled/Returned", Toast.LENGTH_LONG).show();
+                    thisRent = null;
+                    checkoutToggle();
+                }
+            } else {
+                mFriendsSpinner.setVisibility(View.INVISIBLE);
+                mRentButton.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
     public void loadMovieData() {
         Bundle extras = getArguments();
-        int position = extras.getInt("listID");
+        movieID = extras.getInt("listID");
 
-        UserMovieLink link = main.getDbHandler().getUserMovieLink(position + 1);
+        UserMovieLink link = main.getDbHandler().getUserMovieLink(movieID + 1);
 
         if (link != null) {
             mMovieTitle.setText(link.getMovieTitle());
             mMovieSynopsis.setText(link.getMovieSynopsis());
             mMovieRating.setRating(link.getStarrating());
+        }
+
+        ArrayList<Rental> rent = main.getDbHandler().getAllRentals();
+        thisRent = null;
+
+        for (Rental ren: rent) {
+            if (ren.getMovieid() == movieID + 1) {
+                thisRent = ren;
+            }
+        }
+
+        if(thisRent != null) {
+            mCheckInOut.setChecked(true);
+        } else {
+            mCheckInOut.setChecked(false);
         }
     }
 
@@ -189,7 +227,6 @@ public class LibraryMovieDetailFragment extends Fragment {
 
                 if (username != null) {
                     username.setText(contactObject.getFname() + " " + contactObject.getLname());
-                    Log.i("HMM", username.getText().toString());
                 }
             }
 

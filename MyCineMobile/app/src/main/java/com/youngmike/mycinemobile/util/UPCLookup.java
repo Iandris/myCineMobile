@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.youngmike.mycinemobile.api.Items;
-import com.youngmike.mycinemobile.api.ItemsItem;
 import com.youngmike.mycinemobile.com.mycine.Titles;
 import com.youngmike.mycinemobile.com.mycine.TitlesItem;
 import com.youngmike.mycinemobile.com.omdbapi.Title;
@@ -17,7 +15,6 @@ import java.io.InputStream;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by Mike on 4/6/17.
@@ -58,14 +55,12 @@ public class UPCLookup {
 
         try {
             //TODO REMOVE TEMP UPC
-            //upc = "025192251344";
+            upc = "025192251344";
             String url = Uri.parse("http://52.14.69.207:8080/mycine/titles/upc/" + upc).buildUpon()
                     .build().toString();
 
             ObjectMapper mapper = new ObjectMapper();
             Titles results = mapper.readValue(getUrl(url), Titles.class);
-
-            Log.i("HMM", getUrl(url));
 
             if (results != null) {
                 for (TitlesItem item : results.getTitles()
@@ -81,31 +76,6 @@ public class UPCLookup {
 
         }
         return items;
-//        ArrayList<ItemsItem> items = new ArrayList<>();
-//        ArrayList<TitlesItem> titles = new ArrayList<>();
-//
-//        try {
-//            upc = "025192251344";
-//            String url = Uri.parse("http://api.walmartlabs.com/v1/items?apiKey=qwu7hnegpwvtxavz8fsr492q&upc=" + upc + "&format=json").buildUpon()
-//                    .build().toString();
-//
-//            ObjectMapper mapper = new ObjectMapper();
-//            Items results = mapper.readValue(getUrl(url), Items.class);
-//
-//            Log.i("HMM", getUrl(url));
-//
-//            for (ItemsItem item: results.getItems()
-//                 ) {
-//                String namenoSpaces = item.getName().replace(" ", "%20");
-//                titles.addAll(lookupMovie(namenoSpaces));
-//                //items.add(item);
-//            }
-//
-//        } catch (IOException ioe) {
-//            Log.e("HMM", "Failed to fetch items", ioe);
-//
-//        }
-//        return titles;
     }
 
     public UserMovieLink lookupMovie(String imdb) {

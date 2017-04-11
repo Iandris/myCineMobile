@@ -48,7 +48,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/rating_movie_stars"
         android:isIndicator="false"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:stepSize="1" />
 
     <Space
         android:layout_width="match_parent"
@@ -67,60 +69,67 @@
         android:layout_height="57dp"
         android:id="@+id/spnr_movie_friends" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <Button
+        android:text="Rent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_rent" />
 
-        <ImageView
-            android:layout_width="123dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:drawable/ic_menu_info_details"
-            android:id="@+id/img_friend_profile_pic"
-            android:contentDescription="@string/image_placeholder"
-            android:layout_weight="0.26" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_friend_name"
-                android:textSize="18sp" />
+        <!--<ImageView-->
+            <!--android:layout_width="123dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:srcCompat="@android:drawable/ic_menu_info_details"-->
+            <!--android:id="@+id/img_friend_profile_pic"-->
+            <!--android:contentDescription="@string/image_placeholder"-->
+            <!--android:layout_weight="0.26" />-->
 
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_friend_address_1"
-                android:textSize="18sp" />
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1">-->
 
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_friend_address_2"
-                android:textSize="18sp" />
+            <!--<TextView-->
+                <!--android:text="@string/textview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_friend_name"-->
+                <!--android:textSize="18sp" />-->
 
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_friend_phone"
-                android:textSize="18sp" />
+            <!--<TextView-->
+                <!--android:text="@string/textview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_friend_address_1"-->
+                <!--android:textSize="18sp" />-->
 
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_friend_email"
-                android:textSize="18sp" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:text="@string/textview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_friend_address_2"-->
+                <!--android:textSize="18sp" />-->
 
-    </LinearLayout>
+            <!--<TextView-->
+                <!--android:text="@string/textview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_friend_phone"-->
+                <!--android:textSize="18sp" />-->
+
+            <!--<TextView-->
+                <!--android:text="@string/textview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_friend_email"-->
+                <!--android:textSize="18sp" />-->
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
 </LinearLayout>

@@ -26,9 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.youngmike.mycinemobile.api.ItemsItem;
 import com.youngmike.mycinemobile.com.mycine.TitlesItem;
-import com.youngmike.mycinemobile.entity.User;
+
 import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.entity.Wishlist;
 import com.youngmike.mycinemobile.fragment.FriendsFragment;

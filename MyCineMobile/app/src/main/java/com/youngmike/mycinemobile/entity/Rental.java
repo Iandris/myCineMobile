@@ -21,6 +21,14 @@ public class Rental {
   }
 
   /**
+   * getIdRentals method, returns integer value of ID from Rental Entity
+   * @return
+   */
+  public void setIdrentals(int idrentals) {
+    this.idrentals = idrentals;
+  }
+
+  /**
    * getRenterID method, returns integer value of FK User from Rental Entity
    * @return
      */

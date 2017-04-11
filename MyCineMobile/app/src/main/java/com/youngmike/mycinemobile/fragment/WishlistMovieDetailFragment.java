@@ -41,7 +41,7 @@ public class WishlistMovieDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_wishlist_movie_detail, container, false);
 
         mCoverArt = (ImageView) v.findViewById(R.id.img_disk_cover);
-        mFriendIcon = (ImageView) v.findViewById(R.id.img_friend_profile_pic);
+       // mFriendIcon = (ImageView) v.findViewById(R.id.img_friend_profile_pic);
         mMovieTitle = (TextView) v.findViewById(R.id.txt_movie_title);
         mMovieSynopsis = (TextView) v.findViewById(R.id.txt_movie_synopsis);
 
