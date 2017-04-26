@@ -31,9 +31,9 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="send_text_notifications">Send Text Notifications</string>
-    <string name="rental_period_in_days">Rental Period in Days</string>
+    <string name="rental_period_in_days">Rental in Days</string>
     <string name="rental_period">Rental Period</string>
-    <string name="reminder_threshold_in_hours">Reminder Threshold in hours</string>
+    <string name="reminder_threshold_in_hours">Reminder in hours</string>
     <string name="reminder_threshold">Reminder Threshold</string>
     <string name="remember_login">Remember Login</string>
     <string name="save">Save</string>

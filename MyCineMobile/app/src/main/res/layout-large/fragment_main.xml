@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_main"
-        android:textSize="60sp" />
+        android:textSize="48sp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -23,14 +23,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView8"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_width="346dp"
             android:layout_height="wrap_content"
             android:id="@+id/txtNewTitle1"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
     </LinearLayout>
 
@@ -45,14 +45,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView10"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_width="346dp"
             android:layout_height="wrap_content"
             android:id="@+id/txtNewTitle2"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -66,13 +66,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView12"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_height="wrap_content"
             android:id="@+id/txtNewTitle3"
-            android:textSize="48sp"
+            android:textSize="36sp"
             android:layout_width="346dp" />
     </LinearLayout>
 
@@ -81,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView13"
-        android:textSize="60sp" />
+        android:textSize="48sp" />
 
 
     <LinearLayout
@@ -95,14 +95,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView15"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_width="346dp"
             android:layout_height="wrap_content"
             android:id="@+id/txtUpcomingTitle1"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -116,13 +116,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView17"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_height="wrap_content"
             android:id="@+id/txtUpcomingTitle2"
-            android:textSize="48sp"
+            android:textSize="36sp"
             android:layout_width="346dp" />
     </LinearLayout>
 
@@ -137,13 +137,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView19"
             android:textAlignment="center"
-            android:textSize="48sp" />
+            android:textSize="36sp" />
 
         <TextView
             android:text="@string/title"
             android:layout_height="wrap_content"
             android:id="@+id/txtUpcomingTitle3"
-            android:textSize="48sp"
+            android:textSize="36sp"
             android:layout_width="346dp" />
     </LinearLayout>
 

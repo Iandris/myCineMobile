@@ -6,45 +6,44 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:weightSum="1">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="390dp"
+        app:srcCompat="@mipmap/ic_not_found"
+        android:id="@+id/img_disk_cover"
+        android:contentDescription="@string/image_placeholder"
+        android:padding="25dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="218dp"
+        android:layout_weight="0.70">
+
+        <TextView
+            android:text="@string/textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_movie_title"
+            android:textSize="54sp"
+            android:textStyle="normal|bold|italic"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="@string/textview"
+            android:layout_width="match_parent"
+            android:layout_height="141dp"
+            android:id="@+id/txt_movie_synopsis"
+            android:textSize="30sp" />
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1">
 
-        <ImageView
-            android:layout_width="345dp"
-            android:layout_height="486dp"
-            app:srcCompat="@mipmap/ic_not_found"
-            android:id="@+id/img_disk_cover"
-            android:contentDescription="@string/image_placeholder"
-            android:padding="25dp" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_movie_title"
-                android:textSize="36sp" />
-
-            <TextView
-                android:text="@string/textview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/txt_movie_synopsis"
-                android:textSize="24sp" />
-        </LinearLayout>
     </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.63" />
 
     <RatingBar
         android:layout_width="wrap_content"
