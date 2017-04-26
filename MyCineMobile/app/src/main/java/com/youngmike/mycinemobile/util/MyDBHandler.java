@@ -664,7 +664,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         //content object primed with key-value pairs for the data columns extracted from the Product object
-       // values.put("idRentals", rental.getIdrentals());
         values.put("renterID", rental.getRenterid());
         values.put("movieID", rental.getMovieid());
         values.put("dueDate", rental.getDuedate().toString());

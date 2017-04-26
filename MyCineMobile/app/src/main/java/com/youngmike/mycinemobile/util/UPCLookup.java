@@ -18,10 +18,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * UPCLookup Class for MyCineMobile
  * Created by Mike on 4/6/17.
  */
 
 public class UPCLookup {
+    /**
+     * getURLBytes parses out individual bytes from string url, returns array of bytes
+     * @param urlSpec
+     * @return
+     * @throws IOException
+     */
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -46,10 +53,21 @@ public class UPCLookup {
         }
     }
 
+    /**
+     * getUrl - intermediary to return string representation of Byte array
+     * @param urlSpec
+     * @return
+     * @throws IOException
+     */
     String getUrl(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
 
+    /**
+     * checkCode, http call to mycine webapi checking upc code for matched movie titles
+     * @param upc
+     * @return
+     */
     public UserMovieLink checkCode(String upc) {
 
         UserMovieLink items = null;
@@ -76,6 +94,11 @@ public class UPCLookup {
         return items;
     }
 
+    /**
+     * lookupMovie, http call to omdbapi web api using imdb id as reference to return movie details
+     * @param imdb
+     * @return
+     */
     public UserMovieLink lookupMovie(String imdb) {
         UserMovieLink item = null;
 

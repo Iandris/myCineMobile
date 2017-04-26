@@ -59,6 +59,10 @@ public class MainScreenFragment extends Fragment {
         return v;
     }
 
+    /**
+     * populateNewUpcomingReleases - populates the home screen list of new/upcoming titles based on known
+     * items in local db
+     */
     public void populateNewUpcomingReleases() {
         ArrayList<UserMovieLink> movies = main.getDbHandler().getAllUserMovies();
 

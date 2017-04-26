@@ -43,6 +43,7 @@ import com.youngmike.mycinemobile.util.UPCLookup;
 
 /**
  * MainActivity class for MyCineMobile
+ * Author: Mike Young
  */
 
 public class MainActivity extends AppCompatActivity implements

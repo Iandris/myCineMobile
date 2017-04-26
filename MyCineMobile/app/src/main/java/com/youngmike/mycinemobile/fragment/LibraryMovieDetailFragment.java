@@ -48,6 +48,10 @@ public class LibraryMovieDetailFragment extends Fragment {
     Rental thisRent;
     int movieID;
 
+    /**
+     * onSaveInstanceState override - stores instance state to bundle
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt("movieID", movieID);
@@ -122,11 +126,14 @@ public class LibraryMovieDetailFragment extends Fragment {
         loadMovieData();
         populateFriendsList();
 
-       checkoutToggle();
+        checkoutToggle();
 
         return v;
     }
 
+    /**
+     * checkoutToggle - handles the on/off appearance and action of rental button
+     */
     public void checkoutToggle() {
         if (mCheckInOut.isChecked()) {
             mFriendsSpinner.setVisibility(View.VISIBLE);
@@ -146,6 +153,10 @@ public class LibraryMovieDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * loadMovieData method, pulls in movie data from database, creates async call to ImageGrabber
+     * to download image on the fly
+     */
     public void loadMovieData() {
         Bundle extras = getArguments();
         movieID = extras.getInt("listID");
@@ -177,7 +188,9 @@ public class LibraryMovieDetailFragment extends Fragment {
         }
     }
 
-
+    /**
+     * populateFriendsList - populates spinner with friend names for rental choices
+     */
     public void populateFriendsList() {
 
         ArrayList<User> myFriends = main.getDbHandler().getAllUsers();
@@ -241,6 +254,9 @@ public class LibraryMovieDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * ImageGrabberTask - inner class async instantiation and execution of the ImageGrabber.java class
+     */
     private class ImageGrabberTask extends AsyncTask<String,Void,Bitmap> {
         @Override
         protected Bitmap doInBackground(String... path) {
@@ -272,7 +288,10 @@ public class LibraryMovieDetailFragment extends Fragment {
             super.onProgressUpdate(values);
         }
 
-
+        /**
+         * onPostExecute - upon completion of async task, update ui
+         * @param item
+         */
         @Override
         protected void onPostExecute(Bitmap item) {
             if (item != null) {

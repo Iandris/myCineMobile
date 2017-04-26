@@ -11,7 +11,9 @@
         android:layout_height="410dp"
         app:srcCompat="@mipmap/ic_not_found"
         android:id="@+id/img_disk_cover"
-        android:contentDescription="@string/image_placeholder" />
+        android:contentDescription="@string/image_placeholder"
+        android:layout_weight="0.43"
+        android:padding="20dp" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -25,16 +27,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_movie_title"
-            android:textSize="36sp"
-            android:layout_weight="0.89" />
+            android:textSize="60sp"
+            android:layout_weight="0.65"
+            android:textAlignment="center"
+            android:textStyle="normal|bold|italic"
+            android:textAllCaps="true" />
 
         <TextView
             android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="134dp"
             android:id="@+id/txt_movie_synopsis"
-            android:textSize="30sp"
-            android:layout_weight="0.74" />
+            android:textSize="36sp"
+            android:layout_weight="0.21" />
     </LinearLayout>
 
 </LinearLayout>

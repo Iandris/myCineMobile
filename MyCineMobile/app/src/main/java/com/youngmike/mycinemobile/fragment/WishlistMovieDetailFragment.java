@@ -51,6 +51,10 @@ public class WishlistMovieDetailFragment extends Fragment {
         return v;
     }
 
+    /**
+     * loadMovieData method, pulls in movie data from database, creates async call to ImageGrabber
+     * to download image on the fly
+     */
     public void loadMovieData() {
         Bundle extras = getArguments();
         int position = extras.getInt("listID");
@@ -66,6 +70,9 @@ public class WishlistMovieDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * ImageGrabberTask - inner class async instantiation and execution of the ImageGrabber.java class
+     */
     private class ImageGrabberTask extends AsyncTask<String,Void,Bitmap> {
         @Override
         protected Bitmap doInBackground(String... path) {
@@ -97,7 +104,10 @@ public class WishlistMovieDetailFragment extends Fragment {
             super.onProgressUpdate(values);
         }
 
-
+        /**
+         * onPostExecute - upon completion of async task, update ui
+         * @param item
+         */
         @Override
         protected void onPostExecute(Bitmap item) {
             if (item != null) {

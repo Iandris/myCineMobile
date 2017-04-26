@@ -21,6 +21,14 @@ public class Address {
   }
 
   /**
+   * setIdaddresses method, public setter method
+   * @param idaddresses
+     */
+  public void setIdaddresses(int idaddresses) {
+    this.idaddresses = idaddresses;
+  }
+
+  /**
    * getStreetAddress1 method, returns string value of StreetAddress1 in Address Entity
    * @return
      */

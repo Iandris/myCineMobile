@@ -10,11 +10,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * ImageGrabber class for MyCineMobile
+ * Performs async call to image url and returns bitmap image
  * Created by Mike on 4/12/17.
  */
 
 public class ImageGrabber {
 
+    /**
+     * Performs http call to image url specified in imagePath param, returns a Bitmap object for rendering
+     * in the ui thread
+     * @param imagePath
+     * @return
+     */
     public Bitmap fetchItem(String imagePath) {
         Bitmap image = null;
     try {
