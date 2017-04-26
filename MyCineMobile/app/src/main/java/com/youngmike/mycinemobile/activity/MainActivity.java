@@ -26,8 +26,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.youngmike.mycinemobile.com.mycine.TitlesItem;
-
 import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.entity.Wishlist;
 import com.youngmike.mycinemobile.fragment.FriendsFragment;
@@ -39,10 +37,9 @@ import com.youngmike.mycinemobile.fragment.PreferencesFragment;
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.fragment.WishlistFragment;
 import com.youngmike.mycinemobile.fragment.WishlistMovieDetailFragment;
+import com.youngmike.mycinemobile.util.IntentIntegrator;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 import com.youngmike.mycinemobile.util.UPCLookup;
-
-import java.util.ArrayList;
 
 /**
  * MainActivity class for MyCineMobile
@@ -52,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements
         FriendsFragment.OnFriendItemSelected,
         WishlistFragment.OnWishListItemSelected,
         LibraryFragment.OnLibraryItemSelected {
+
     private ActionBar mActionBar;
     private CoordinatorLayout mCoordinatorLayout;
     private int mDestination;
@@ -64,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
     public boolean mIsLoggedIn = false;
     private FloatingActionButton fab;
-    ArrayList<TitlesItem> mItems;
     private String upc;
 
     /**
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (libraryFrag != null) {
                     mDestination = 1;
-                    launchBarodeScan();
+                    launchBarcodeScan();
                 }
 
                 FriendsFragment friendFrag = (FriendsFragment)getSupportFragmentManager().findFragmentByTag("FRIENDS_FRAGMENT");
@@ -159,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (wishlistFrag != null) {
                     mDestination = 3;
-                    launchBarodeScan();
+                    launchBarcodeScan();
                 }
             }
         });
@@ -167,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-
             if (mIsLoggedIn) {
                 selectItem(0);
                 invalidateOptionsMenu();
@@ -334,19 +330,12 @@ public class MainActivity extends AppCompatActivity implements
         invalidateOptionsMenu();
     }
 
-    protected void launchBarodeScan() {
-        Intent barcodeIntent = new Intent("com.google.zxing.client.android.SCAN");
-        barcodeIntent.putExtra("SCAN_MODE", "SCAN_MODE");
-
-        //ensure intent can resolve an available activity
-        if (barcodeIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(barcodeIntent, mDestination);
-
-        } else {
-            //assumes that no app is installed on virtual device
-            Toast.makeText(getApplicationContext(), "Please Install Google ZXING Barcode Scanner",
-                    Toast.LENGTH_LONG).show();
-        }
+    /**
+     * launchBarcodeScan creates the intent for the zxing barcode scanner
+     */
+    protected void launchBarcodeScan() {
+         IntentIntegrator integrator = new IntentIntegrator(this);
+         integrator.initiateScan(mDestination);
     }
 
     /**
@@ -359,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements
         transaction.replace(R.id.fragment_container, newFragment, mFragTag);
         transaction.addToBackStack(null);
 
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     /**
@@ -419,11 +408,19 @@ public class MainActivity extends AppCompatActivity implements
         Toast.makeText(this, "Future implementaion of Edit/Show Friend Details", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * onWishlistItemSelected handles the item selection from Wishlist list
+     * @param position
+     */
     @Override
     public void onWishlistItemSelected(int position){
         switchToMovieDetail(false, position);
     }
 
+    /**
+     * onLibraryItemSelected handles the item selection from library list
+     * @param position
+     */
     @Override
     public void onLibraryItemSelected(int position){
         switchToMovieDetail(true, position);
@@ -449,6 +446,11 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * swaps out the library or wishlist movie detail fragment
+     * @param library
+     * @param position
+     */
     public void switchToMovieDetail(Boolean library, int position) {
 
         TextView movieTitle = (TextView) findViewById(R.id.txt_movie_title);
@@ -472,29 +474,36 @@ public class MainActivity extends AppCompatActivity implements
             }
     }
 
+    /**
+     * onActivityResult occurs after intent for barcode scan, determines next action
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (resultCode == Activity.RESULT_OK ) {
-            upc = intent.getStringExtra("SCAN_RESULT");
-            mDestination = requestCode;
-            new UPCLookupTask().execute(upc);
-        } else {
-            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
-            selectItem(0);
-        }
-
+            if (resultCode == Activity.RESULT_OK) {
+                upc = intent.getStringExtra("SCAN_RESULT");
+                mDestination = requestCode;
+                new UPCLookupTask().execute(upc);
+            }
     }
 
+    /**
+     * getter for local dbhandler object
+     * @return
+     */
     public MyDBHandler getDbHandler() {
         return dbHandler;
     }
 
+    /**
+     * UPCLookupTask class, async task call to UPCLookup.java and executes in separate thread
+     */
     private class UPCLookupTask extends AsyncTask<String,Void,UserMovieLink> {
         @Override
-        protected UserMovieLink doInBackground(String... upc) {
-            return new UPCLookup().checkCode(upc[0]);
+        protected UserMovieLink doInBackground(String... something) {
+            return new UPCLookup().checkCode(upc);
         }
 
         /**
@@ -523,19 +532,22 @@ public class MainActivity extends AppCompatActivity implements
             super.onProgressUpdate(values);
         }
 
-        /*
-          runs after doInBackground()
+        /**
+         * onPostExecute method runs after async thread completes, used to update ui with changes
+         * @param items
          */
         @Override
         protected void onPostExecute(UserMovieLink items) {
             if (items != null) {
-                Toast.makeText(getApplicationContext(), items.getMovieTitle() + " added/updated", Toast.LENGTH_LONG).show();
 
                 if (mDestination == 1) {
 
-                    dbHandler.addUserMovieLink(items);
+                    if (dbHandler.getUserMovieLinkByMovie(items.getMovieid()) == null) {
+                        dbHandler.addUserMovieLink(items);
+                    } else {
+                        dbHandler.updateUserMovieLink(items);
+                    }
 
-                    mItems = null;
                     LibraryFragment library = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
                     library.mLibrarylistAdapter.notifyDataSetChanged();
 
@@ -545,12 +557,21 @@ public class MainActivity extends AppCompatActivity implements
                     list.setUserid(1);
                     list.setMovieTitle(items.getMovieTitle());
                     list.setMovieSynopsis(items.getMovieSynopsis());
+                    list.setImagePath(items.getImagePath());
 
-                    dbHandler.addWishList(list);
+                    if (dbHandler.getWishListByMovie(list.getMovieid()) == null) {
+                        dbHandler.addWishList(list);
+                    } else {
+                        dbHandler.updateWishList(list);
+                    }
 
-                    mItems = null;
+
+                    WishlistFragment wishlist = (WishlistFragment) getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
+                    wishlist.mWishlistAdapter.notifyDataSetChanged();
 
                 }
+                Toast.makeText(getApplicationContext(), items.getMovieTitle() + " added/updated", Toast.LENGTH_LONG).show();
+
                 selectItem(0);
             } else {
                 Toast.makeText(getApplicationContext(), "No title found for scanned barcode", Toast.LENGTH_LONG).show();

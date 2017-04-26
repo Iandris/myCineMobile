@@ -67,11 +67,11 @@ public class MainScreenFragment extends Fragment {
             }
 
             if (movies.size() > 1) {
-                mNew1.setText(movies.get(1).getMovieTitle());
+                mNew2.setText(movies.get(1).getMovieTitle());
             }
 
             if (movies.size() > 2) {
-                mNew1.setText(movies.get(2).getMovieTitle());
+                mNew3.setText(movies.get(2).getMovieTitle());
             }
 
             if (movies.size() > 3) {

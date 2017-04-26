@@ -12,6 +12,8 @@ public class Wishlist {
 
   private String movieSynopsis;
 
+  private String imagePath;
+
   public int getIdwishlistlink() {
     return idwishlistlink;
   }
@@ -48,4 +50,12 @@ public class Wishlist {
     this.movieTitle = movieTitle;
   }
 
+
+  public String getImagePath() {
+    return imagePath;
+  }
+
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
+  }
 }

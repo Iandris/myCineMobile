@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="272dp"
             android:layout_height="410dp"
-            app:srcCompat="@android:drawable/ic_menu_info_details"
+            app:srcCompat="@mipmap/ic_not_found"
             android:id="@+id/img_disk_cover"
             android:contentDescription="@string/image_placeholder" />
 

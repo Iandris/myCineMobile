@@ -1,20 +1,20 @@
 package com.youngmike.mycinemobile.fragment;
 
+import android.graphics.Bitmap;
+
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
-import com.youngmike.mycinemobile.entity.UserMovieLink;
 import com.youngmike.mycinemobile.entity.Wishlist;
+import com.youngmike.mycinemobile.util.ImageGrabber;
 
 /**
  * LibraryMovieDetailFragment for MyCineMobile
@@ -23,7 +23,6 @@ import com.youngmike.mycinemobile.entity.Wishlist;
 
 public class WishlistMovieDetailFragment extends Fragment {
     ImageView mCoverArt;
-    ImageView mFriendIcon;
     TextView mMovieTitle;
     TextView mMovieSynopsis;
     MainActivity main;
@@ -41,7 +40,6 @@ public class WishlistMovieDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_wishlist_movie_detail, container, false);
 
         mCoverArt = (ImageView) v.findViewById(R.id.img_disk_cover);
-       // mFriendIcon = (ImageView) v.findViewById(R.id.img_friend_profile_pic);
         mMovieTitle = (TextView) v.findViewById(R.id.txt_movie_title);
         mMovieSynopsis = (TextView) v.findViewById(R.id.txt_movie_synopsis);
 
@@ -60,8 +58,53 @@ public class WishlistMovieDetailFragment extends Fragment {
         Wishlist link = main.getDbHandler().getWishList(position + 1);
 
         if (link != null) {
+            new ImageGrabberTask().execute(link.getImagePath());
             mMovieTitle.setText(link.getMovieTitle());
             mMovieSynopsis.setText(link.getMovieSynopsis());
+
+
+        }
+    }
+
+    private class ImageGrabberTask extends AsyncTask<String,Void,Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... path) {
+            return new ImageGrabber().fetchItem(path[0]);
+        }
+
+        /**
+         * Runs on the UI thread before {@link #doInBackground}.
+         *
+         * @see #onPostExecute
+         * @see #doInBackground
+         */
+        @Override
+        protected void onPreExecute() {
+            // showing a progress bar in the user interface
+            super.onPreExecute();
+        }
+
+        /**
+         * Runs on the UI thread after {@link #publishProgress} is invoked.
+         * The specified values are the values passed to {@link #publishProgress}.
+         *
+         * @param values The values indicating progress.
+         * @see #publishProgress
+         * @see #doInBackground
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+
+        @Override
+        protected void onPostExecute(Bitmap item) {
+            if (item != null) {
+                mCoverArt.setImageBitmap(item);
+            } else {
+                mCoverArt.setImageResource(R.drawable.ic_not_found_web);
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ public class PreferencesFragment extends Fragment {
     CheckBox mRememberMe;
     EditText mUsername;
     EditText mPassword;
+    EditText mPhone;
     MainActivity main;
 
     /**
@@ -59,6 +59,7 @@ public class PreferencesFragment extends Fragment {
         mRememberMe = (CheckBox) v.findViewById(R.id.cbx_remember_me);
         mUsername = (EditText) v.findViewById(R.id.et_prefUser);
         mPassword = (EditText) v.findViewById(R.id.et_prefPassword);
+        mPhone   = (EditText) v.findViewById(R.id.et_phone);
 
 
              mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +76,11 @@ public class PreferencesFragment extends Fragment {
 
                 if (mLastName.getText().toString().isEmpty() || mLastName.getText().toString().equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Last Name is a required field.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mPhone.getText().toString().isEmpty() || mPhone.getText().toString().equals("")) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Phone Number is a required field.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -98,6 +104,7 @@ public class PreferencesFragment extends Fragment {
                     return;
                 }
 
+
                 saveMyPreferences();
             }
         });
@@ -118,6 +125,7 @@ public class PreferencesFragment extends Fragment {
 
         mFirstName.setText(sharedPreferences.getString("First_Name", ""));
         mLastName.setText(sharedPreferences.getString("Last_Name", ""));
+        mPhone.setText(sharedPreferences.getString("Phone", ""));
         mTextNotifications.setChecked(sharedPreferences.getBoolean("Text_Notifications", false));
 
         mRentalPeriod.setText(String.valueOf(sharedPreferences.getInt("Rental_Period", 7)));
@@ -135,6 +143,9 @@ public class PreferencesFragment extends Fragment {
         int reminder = 48;
         savePreferences("First_Name", mFirstName.getText().toString());
         savePreferences("Last_Name", mLastName.getText().toString());
+        savePreferences("Phone", mPhone.getText().toString());
+
+
         savePreferences("Text_Notifications", mTextNotifications.isChecked());
 
         if (!mRentalPeriod.getText().toString().equals("")) {
@@ -162,22 +173,13 @@ public class PreferencesFragment extends Fragment {
             user.setReminderthreshold(Integer.parseInt(mReminderThreshold.getText().toString()));
             user.setDefaultrentalperiod(Integer.parseInt(mRentalPeriod.getText().toString()));
             user.setAddressid(1);
-            user.setCellnumber("0987654321");
+            user.setCellnumber(mPhone.getText().toString());
             user.setFirebaseUID("12345678909876543212345678");
             main.getDbHandler().addUser(user);
         }
 
         Toast.makeText(getActivity().getApplicationContext(), "Settings Saved.", Toast.LENGTH_SHORT).show();
 
-
-//        MainScreenFragment newFragment = new MainScreenFragment();
-//
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//
-//        transaction.replace(R.id.fragment_container, newFragment);
-//        transaction.addToBackStack(null);
-//
-//        transaction.commit();
         main.mIsLoggedIn = true;
         main.selectItem(0);
 

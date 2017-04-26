@@ -12,24 +12,27 @@
     <ImageView
         android:layout_width="178dp"
         android:layout_height="267dp"
-        app:srcCompat="@android:drawable/ic_menu_info_details"
+        app:srcCompat="@mipmap/ic_not_found"
         android:id="@+id/img_disk_cover"
         android:layout_weight="0.20"
         android:contentDescription="@string/image_placeholder"
-        tools:ignore="InefficientWeight" />
+        tools:ignore="InefficientWeight"
+        android:paddingTop="10dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="0.73">
+        android:layout_weight="0.73"
+        android:weightSum="1">
 
         <TextView
             android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="51dp"
             android:id="@+id/txt_movie_title"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:layout_weight="0.92" />
 
         <TextView
             android:text="@string/textview"

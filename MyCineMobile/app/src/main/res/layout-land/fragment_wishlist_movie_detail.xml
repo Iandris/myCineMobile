@@ -12,34 +12,33 @@
     <ImageView
         android:layout_width="267dp"
         android:layout_height="match_parent"
-        app:srcCompat="@android:drawable/ic_menu_info_details"
+        app:srcCompat="@mipmap/ic_not_found"
         android:id="@+id/img_disk_cover"
         android:contentDescription="@string/image_placeholder"
-        tools:ignore="InefficientWeight" />
+        tools:ignore="InefficientWeight"
+        android:padding="5dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
         <TextView
             android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="51dp"
-            android:id="@+id/textView26"
-            android:textSize="30sp" />
+            android:id="@+id/txt_movie_title"
+            android:textSize="30sp"
+            android:layout_weight="0.32" />
 
         <TextView
             android:text="@string/textview"
             android:layout_width="match_parent"
             android:layout_height="107dp"
-            android:id="@+id/txt_movie_synopsis" />
-
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rating_movie_stars"
-            android:layout_gravity="center" />
+            android:id="@+id/txt_movie_synopsis"
+            android:layout_weight="0.23"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -66,7 +66,6 @@ public class LoginFragment extends Fragment {
 
                 if (username == "") {
                     main.selectItem(4);
-                    //main.invalidateOptionsMenu();
                 } else {
 
                     if (mUserName.getText().toString().equals(username) && mPassword.getText().toString().equals(pwrd)) {

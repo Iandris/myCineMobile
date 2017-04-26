@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.com.mycine.Titles;
 import com.youngmike.mycinemobile.com.mycine.TitlesItem;
 import com.youngmike.mycinemobile.com.omdbapi.Title;
@@ -54,8 +55,6 @@ public class UPCLookup {
         UserMovieLink items = null;
 
         try {
-            //TODO REMOVE TEMP UPC
-            upc = "025192251344";
             String url = Uri.parse("http://52.14.69.207:8080/mycine/titles/upc/" + upc).buildUpon()
                     .build().toString();
 
@@ -72,7 +71,6 @@ public class UPCLookup {
             }
 
         } catch (IOException ioe) {
-            Log.e("HMM", "Failed to fetch items", ioe);
 
         }
         return items;
@@ -91,12 +89,18 @@ public class UPCLookup {
             item = new UserMovieLink();
             item.setMovieTitle(results.getTitle());
             item.setMovieSynopsis(results.getPlot());
+
+            if (!results.getPoster().startsWith("/mycine")) {
+                item.setImagePath(results.getPoster());
+            } else {
+                item.setImagePath(null);
+            }
+
             item.setQuantity(1);
             item.setStarrating(1);
             item.setUserid(1);
 
         } catch (IOException ioe) {
-            Log.e("HMM", "Failed to fetch items", ioe);
 
         }
         return item;

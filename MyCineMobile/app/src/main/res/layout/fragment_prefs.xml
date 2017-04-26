@@ -1,160 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:text="@string/my_preferences"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/txt_settings"
-        android:textSize="24sp" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:text="@string/first_name"
-            android:layout_width="196dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/et_firstName"
-            android:layout_weight="1"
-            android:hint="@string/first_name" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:text="@string/last_name"
-            android:layout_width="196dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/et_LastName"
-            android:hint="@string/last_name"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <CheckBox
-        android:text="@string/send_text_notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cbx_TextNotification"
-        android:layout_weight="0.50" />
-
-    <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="@string/rental_period_in_days"
-            android:layout_width="195dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView" />
+            android:text="@string/my_preferences"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/txt_settings"
+            android:textSize="24sp" />
 
-        <EditText
-            android:layout_width="0dp"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/first_name"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/et_firstName"
+                android:layout_weight="1"
+                android:hint="@string/first_name" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/last_name"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/et_LastName"
+                android:hint="@string/last_name"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Phone Number"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView7" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:ems="10"
+                android:id="@+id/et_phone"
+                android:hint="Phone Number"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <CheckBox
+            android:text="@string/send_text_notifications"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/et_RentalPeriod"
-            android:layout_weight="1"
-            android:hint="@string/rental_period" />
+            android:id="@+id/cbx_TextNotification"
+            android:layout_weight="0.50" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/rental_period_in_days"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/et_RentalPeriod"
+                android:layout_weight="1"
+                android:hint="@string/rental_period" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/reminder_threshold_in_hours"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/et_ReminderThreshold"
+                android:hint="@string/reminder_threshold"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/username_email"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_prefUser"
+                android:hint="@string/username_email"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/pasword"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_prefPassword"
+                android:hint="@string/Password"
+                android:layout_weight="1"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <CheckBox
+            android:text="@string/remember_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbx_remember_me"
+            android:layout_weight="0.50" />
+
+        <Button
+            android:text="@string/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_savePref" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/reminder_threshold_in_hours"
-            android:layout_width="195dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/et_ReminderThreshold"
-            android:hint="@string/reminder_threshold"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/username_email"
-            android:layout_width="195dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/et_prefUser"
-            android:hint="@string/username_email"
-            android:layout_weight="1"
-            android:inputType="textEmailAddress" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/pasword"
-            android:layout_width="195dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView5" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/et_prefPassword"
-            android:hint="@string/Password"
-            android:layout_weight="1"
-            android:inputType="textPassword" />
-    </LinearLayout>
-
-    <CheckBox
-        android:text="@string/remember_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cbx_remember_me"
-        android:layout_weight="0.50" />
-
-    <Button
-        android:text="@string/save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_savePref" />
-</LinearLayout>
+</ScrollView>

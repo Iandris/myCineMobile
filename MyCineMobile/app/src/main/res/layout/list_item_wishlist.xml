@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textSize="16sp"
-                android:textColor="#02f961"
+                android:textColor="@android:color/holo_blue_dark"
                 android:id="@+id/txt_wishlist_movie_synopsis"/>
         </LinearLayout>
 

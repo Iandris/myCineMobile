@@ -59,7 +59,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String CREATE_USERMOVIE_TABLE = "CREATE TABLE UserMovie (linkID INTEGER PRIMARY KEY NOT NULL, " +
                 "userID INTEGER NOT NULL, movieID INTEGER NOT NULL, quantity INTEGER NOT NULL, " +
                 "starRating INTEGER, movieTitle VARCHAR(45) NOT NULL, movieSynopsis VARCHAR(128) NOT NULL, " +
-                "CONSTRAINT ownerID FOREIGN KEY (userID) REFERENCES users (id));" +
+                "imagePath VARCHAR, CONSTRAINT ownerID FOREIGN KEY (userID) REFERENCES users (id));" +
                 "CREATE UNIQUE INDEX linkID_UNIQUE ON UserMovie (linkID); " +
                 "CREATE INDEX ownerID_idx ON UserMovie (userID);";
 
@@ -78,8 +78,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 "CREATE INDEX renterID_idx ON Rentals (renterID);";
 
         String CREATE_WISHLIST_TABLE = "CREATE TABLE WishList (idWishListLink INTEGER PRIMARY KEY NOT NULL, " +
-                "userID INTEGER NOT NULL, movieID INTEGER NOT NULL, movieTitle VARCHAR(45) NOT NULL, movieSynopsis VARCHAR(128) NOT NULL);" +
-                "CREATE UNIQUE INDEX idWishListLink_UNIQUE ON WishList (idWishListLink);";
+                "userID INTEGER NOT NULL, movieID INTEGER NOT NULL, movieTitle VARCHAR(45) NOT NULL, movieSynopsis VARCHAR(128) NOT NULL," +
+                "imagePath VARCHAR); CREATE UNIQUE INDEX idWishListLink_UNIQUE ON WishList (idWishListLink);";
 
 
         db.execSQL(CREATE_ADDRESSES_TABLE);
@@ -363,6 +363,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             link.setStarrating(Integer.parseInt(cursor.getString(4)));
             link.setMovieTitle(cursor.getString((5)));
             link.setMovieSynopsis(cursor.getString(6));
+            link.setImagePath(cursor.getString(7));
             links.add(link);
         }
         cursor.close();
@@ -396,6 +397,36 @@ public class MyDBHandler extends SQLiteOpenHelper {
             link.setStarrating(Integer.parseInt(cursor.getString(4)));
             link.setMovieTitle(cursor.getString((5)));
             link.setMovieSynopsis(cursor.getString(6));
+            link.setImagePath(cursor.getString(7));
+            cursor.close();
+        } else {
+            link = null;
+        }
+        db.close();
+
+        return link;
+    }
+
+    public UserMovieLink getUserMovieLinkByMovie (int movieID) {
+        String query = "SELECT * FROM UserMovie WHERE movieID =  \"" + movieID + "\"";
+
+        UserMovieLink link = new UserMovieLink();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            link.setLinkid(Integer.parseInt(cursor.getString(0)));
+            link.setUserid(Integer.parseInt(cursor.getString(1)));
+            link.setMovieid(Integer.parseInt(cursor.getString(2)));
+            link.setQuantity(Integer.parseInt(cursor.getString(3)));
+            link.setStarrating(Integer.parseInt(cursor.getString(4)));
+            link.setMovieTitle(cursor.getString((5)));
+            link.setMovieSynopsis(cursor.getString(6));
+            link.setImagePath(cursor.getString(7));
             cursor.close();
         } else {
             link = null;
@@ -419,6 +450,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("starRating", link.getStarrating());
         values.put("movieTitle", link.getMovieTitle());
         values.put("movieSynopsis", link.getMovieSynopsis());
+        values.put("imagePath", link.getImagePath());
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -443,6 +475,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("starRating", link.getStarrating());
         values.put("movieTitle", link.getMovieTitle());
         values.put("movieSynopsis", link.getMovieSynopsis());
+        values.put("imagePath", link.getImagePath());
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
@@ -702,6 +735,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             wish.setMovieid(Integer.parseInt(cursor.getString(2)));
             wish.setMovieTitle(cursor.getString((3)));
             wish.setMovieSynopsis(cursor.getString(4));
+            wish.setImagePath(cursor.getString(5));
             rentals.add(wish);
         }
         cursor.close();
@@ -732,6 +766,33 @@ public class MyDBHandler extends SQLiteOpenHelper {
             wish.setMovieid(Integer.parseInt(cursor.getString(2)));
             wish.setMovieTitle(cursor.getString((3)));
             wish.setMovieSynopsis(cursor.getString(4));
+            wish.setImagePath(cursor.getString(5));
+            cursor.close();
+        } else {
+            wish = null;
+        }
+        db.close();
+
+        return wish;
+    }
+
+    public Wishlist getWishListByMovie (int movieID) {
+        String query = "SELECT * FROM WishList WHERE movieID =  \"" + movieID + "\"";
+
+        Wishlist wish = new Wishlist();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        //only the first match will then be returned, contained within a
+        // new instance of our Product data model class
+        if (cursor.moveToFirst()) {
+            wish.setUserid(Integer.parseInt(cursor.getString(1)));
+            wish.setMovieid(Integer.parseInt(cursor.getString(2)));
+            wish.setMovieTitle(cursor.getString((3)));
+            wish.setMovieSynopsis(cursor.getString(4));
+            wish.setImagePath(cursor.getString(5));
             cursor.close();
         } else {
             wish = null;
@@ -753,7 +814,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("movieID", wish.getMovieid());
         values.put("movieTitle", wish.getMovieTitle());
         values.put("movieSynopsis", wish.getMovieSynopsis());
-
+        values.put("imagePath", wish.getImagePath());
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -775,7 +836,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put("movieID", wish.getMovieid());
         values.put("movieTitle", wish.getMovieTitle());
         values.put("movieSynopsis", wish.getMovieSynopsis());
-
+        values.put("imagePath", wish.getImagePath());
 
         //  a reference to the database will be obtained
         SQLiteDatabase db = this.getWritableDatabase();

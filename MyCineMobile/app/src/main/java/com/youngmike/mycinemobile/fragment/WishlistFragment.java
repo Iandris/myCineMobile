@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.support.v4.app.Fragment;
 import com.youngmike.mycinemobile.R;
 import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.Wishlist;
-import com.youngmike.mycinemobile.util.MyDBHandler;
 
 import java.util.ArrayList;
 
@@ -112,12 +110,6 @@ public class WishlistFragment extends Fragment {
 
         mListView.setAdapter(mWishlistAdapter);
         mWishlistAdapter.notifyDataSetChanged();
-    }
-
-    public void update() {
-        mWishlistAdapter.notifyDataSetChanged();
-
-        //this.getView().invalidate();
     }
 
     /**

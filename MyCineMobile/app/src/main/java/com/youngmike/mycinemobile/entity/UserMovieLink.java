@@ -16,6 +16,8 @@ public class UserMovieLink {
 
   private String movieSynopsis;
 
+  private String imagePath;
+
   public int getLinkid() {
     return linkid;
   }
@@ -71,5 +73,13 @@ public class UserMovieLink {
 
   public void setMovieTitle(String movieTitle) {
     this.movieTitle = movieTitle;
+  }
+
+  public String getImagePath() {
+    return imagePath;
+  }
+
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
   }
 }

@@ -1,6 +1,9 @@
 package com.youngmike.mycinemobile.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.entity.Rental;
 import com.youngmike.mycinemobile.entity.User;
 import com.youngmike.mycinemobile.entity.UserMovieLink;
+import com.youngmike.mycinemobile.util.ImageGrabber;
 import com.youngmike.mycinemobile.util.MyDBHandler;
 
 import org.joda.time.DateTime;
@@ -149,9 +153,12 @@ public class LibraryMovieDetailFragment extends Fragment {
         UserMovieLink link = main.getDbHandler().getUserMovieLink(movieID + 1);
 
         if (link != null) {
+            new ImageGrabberTask().execute(link.getImagePath());
+
             mMovieTitle.setText(link.getMovieTitle());
             mMovieSynopsis.setText(link.getMovieSynopsis());
             mMovieRating.setRating(link.getStarrating());
+
         }
 
         ArrayList<Rental> rent = main.getDbHandler().getAllRentals();
@@ -234,4 +241,45 @@ public class LibraryMovieDetailFragment extends Fragment {
         }
     }
 
+    private class ImageGrabberTask extends AsyncTask<String,Void,Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... path) {
+            return new ImageGrabber().fetchItem(path[0]);
+        }
+
+        /**
+         * Runs on the UI thread before {@link #doInBackground}.
+         *
+         * @see #onPostExecute
+         * @see #doInBackground
+         */
+        @Override
+        protected void onPreExecute() {
+            // showing a progress bar in the user interface
+            super.onPreExecute();
+        }
+
+        /**
+         * Runs on the UI thread after {@link #publishProgress} is invoked.
+         * The specified values are the values passed to {@link #publishProgress}.
+         *
+         * @param values The values indicating progress.
+         * @see #publishProgress
+         * @see #doInBackground
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+
+        @Override
+        protected void onPostExecute(Bitmap item) {
+            if (item != null) {
+                mCoverArt.setImageBitmap(item);
+            } else {
+                mCoverArt.setImageResource(R.drawable.ic_not_found_web);
+            }
+        }
+    }
 }
