@@ -1,10 +1,8 @@
 package com.youngmike.mycinemobile.util;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.youngmike.mycinemobile.activity.MainActivity;
 import com.youngmike.mycinemobile.com.mycine.Titles;
 import com.youngmike.mycinemobile.com.mycine.TitlesItem;
 import com.youngmike.mycinemobile.com.omdbapi.Title;
@@ -41,7 +39,7 @@ public class UPCLookup {
                 return null;
             }
 
-            int bytesRead = 0;
+            int bytesRead;
             byte[] buffer = new byte[1024];
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);

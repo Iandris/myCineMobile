@@ -138,26 +138,22 @@ public class MainActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LibraryFragment libraryFrag = (LibraryFragment)getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
-
-                if (libraryFrag != null) {
-                    mDestination = 1;
-                    launchBarcodeScan();
-                }
-
-                FriendsFragment friendFrag = (FriendsFragment)getSupportFragmentManager().findFragmentByTag("FRIENDS_FRAGMENT");
-
-                if (friendFrag != null) {
-                    Snackbar.make(view, "Future Implementation of add Friend", Snackbar
+                switch (mDestination) {
+                    case 0:
+                        break;
+                    case 1:
+                        launchBarcodeScan();
+                        break;
+                    case 2:
+                        Snackbar.make(view, "Future Implementation of add Friend", Snackbar
                             .LENGTH_LONG)
                             .setAction("Action", null).show();
-                }
-
-                WishlistFragment wishlistFrag = (WishlistFragment)getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
-
-                if (wishlistFrag != null) {
-                    mDestination = 3;
-                    launchBarcodeScan();
+                        break;
+                    case 3:
+                        launchBarcodeScan();
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -204,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mDestination = position;
             selectItem(position);
         }
     }
@@ -543,11 +540,8 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (mDestination == 1) {
 
-                    if (dbHandler.getUserMovieLinkByMovie(items.getMovieid()) == null) {
-                        dbHandler.addUserMovieLink(items);
-                    } else {
-                        dbHandler.updateUserMovieLink(items);
-                    }
+                    dbHandler.addUserMovieLink(items);
+
 
                     LibraryFragment library = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("LIBRARY_FRAGMENT");
                     library.mLibrarylistAdapter.notifyDataSetChanged();
@@ -560,11 +554,7 @@ public class MainActivity extends AppCompatActivity implements
                     list.setMovieSynopsis(items.getMovieSynopsis());
                     list.setImagePath(items.getImagePath());
 
-                    if (dbHandler.getWishListByMovie(list.getMovieid()) == null) {
-                        dbHandler.addWishList(list);
-                    } else {
-                        dbHandler.updateWishList(list);
-                    }
+                    dbHandler.addWishList(list);
 
 
                     WishlistFragment wishlist = (WishlistFragment) getSupportFragmentManager().findFragmentByTag("WISHLIST_FRAGMENT");
@@ -572,11 +562,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 }
                 Toast.makeText(getApplicationContext(), items.getMovieTitle() + " added/updated", Toast.LENGTH_LONG).show();
-
-                selectItem(0);
             } else {
                 Toast.makeText(getApplicationContext(), "No title found for scanned barcode", Toast.LENGTH_LONG).show();
             }
+            selectItem(0);
         }
     }
 }
